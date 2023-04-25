@@ -1,0 +1,13 @@
+ion-content {
+    div {
+        display: grid;
+        place-items: center;
+        height: 100%;
+
+        ion-card {
+            ion-item {
+                --background: transparent;
+            }
+        }
+    }
+}
