@@ -13,13 +13,15 @@ import {
     FirebaseOptions,
     getApp,
 } from '@angular/fire/app'
-import { LoginModule } from './login/login.module'
-import { AuthModule } from './auth/auth.module'
-import { AlertModule } from './alert/alert.module'
 import { StoreModule } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import metaReducers from './reducers'
+import {
+    browserLocalPersistence,
+    initializeAuth,
+    provideAuth,
+} from '@angular/fire/auth'
 
 const firebaseOptions: FirebaseOptions = {
     apiKey: 'AIzaSyBuYSxXqEOR9Ewe7pVZGNUq2NtEHX6Iajw',
@@ -34,9 +36,6 @@ const firebaseOptions: FirebaseOptions = {
         IonicModule.forRoot(),
         AppRoutingModule,
         provideFirebaseApp(() => initializeApp(firebaseOptions)),
-        AuthModule,
-        AlertModule,
-        LoginModule,
         StoreModule.forRoot(
             {},
             {
@@ -51,6 +50,11 @@ const firebaseOptions: FirebaseOptions = {
         StoreDevtoolsModule.instrument({
             maxAge: 25, // Retains last 25 states
         }),
+        provideAuth(() =>
+            initializeAuth(getApp(), {
+                persistence: browserLocalPersistence,
+            }),
+        ),
     ],
     providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
     bootstrap: [AppComponent],

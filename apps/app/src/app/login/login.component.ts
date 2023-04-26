@@ -1,14 +1,16 @@
 import { Component } from '@angular/core'
-import { FormBuilder, Validators } from '@angular/forms'
-import { AuthService } from '../auth/auth.service'
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
+import { AuthService } from '../services/auth.service'
 import { isNil } from 'rambda'
-import { AlertService } from '../alert/alert.service'
-import { NavController } from '@ionic/angular'
+import { AlertService } from '../services/alert.service'
+import { IonicModule, NavController } from '@ionic/angular'
 
 @Component({
     selector: 'beta-asset-app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
+    standalone: true,
+    imports: [IonicModule, ReactiveFormsModule],
 })
 export class LoginComponent {
     public form = this.fb.group({

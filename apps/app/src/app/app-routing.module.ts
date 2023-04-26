@@ -19,14 +19,14 @@ const routes: Routes = [
     },
     {
         path: 'login',
-        loadChildren: () =>
-            import('./login/login.module').then((m) => m.LoginModule),
+        loadComponent: () =>
+            import('./login/login.component').then((m) => m.LoginComponent),
         ...canActivate(redirectToHome),
     },
     {
         path: 'home',
-        loadChildren: () =>
-            import('./home/home.module').then((m) => m.HomeModule),
+        loadComponent: () =>
+            import('./home/home.component').then((m) => m.HomeComponent),
         ...canActivate(redirectToLogin),
     },
 ]

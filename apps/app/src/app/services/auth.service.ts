@@ -3,7 +3,7 @@ import { Auth, User, signInWithEmailAndPassword } from '@angular/fire/auth'
 
 import { BehaviorSubject, from } from 'rxjs'
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthService {
     private authStateSubject = new BehaviorSubject<User | null>(null)
 
