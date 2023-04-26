@@ -1,16 +1,6 @@
-import { Injectable, inject } from '@angular/core'
-import { createEffect, Actions, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects'
-import {
-    switchMap,
-    catchError,
-    of,
-    tap,
-    withLatestFrom,
-    filter,
-    map,
-    delay,
-    from,
-} from 'rxjs'
+import { Injectable } from '@angular/core'
+import { createEffect, Actions, ofType } from '@ngrx/effects'
+import { switchMap, tap, withLatestFrom, map, of, delay } from 'rxjs'
 import {
     cacheAssets,
     cacheEntries,
@@ -18,25 +8,23 @@ import {
     checkSync,
     syncSuccess,
 } from './contentful.actions'
-import { ModalController } from '@ionic/angular'
 import { ContentfulService } from './contentful.service'
 import { IContentfulState, selectNextSyncToken } from './contentful.reducer'
 import { Store } from '@ngrx/store'
-import { Storage } from '@ionic/storage-angular'
+import { isEmpty } from 'rambda'
 
 @Injectable()
 export class ContentfulEffects {
     constructor(
         private actions$: Actions,
-        private modalController: ModalController,
         private service: ContentfulService,
         private store: Store<IContentfulState>,
-        private storage: Storage,
     ) {}
 
     checkSyncStatus$ = createEffect(() =>
         this.actions$.pipe(
             ofType(checkSync),
+            tap(() => this.service.showSyncModal()),
             withLatestFrom(this.store.select(selectNextSyncToken)),
             switchMap(([, nextSyncToken]) =>
                 this.service.checkForUpdate(nextSyncToken).pipe(
@@ -60,9 +48,12 @@ export class ContentfulEffects {
         this.actions$.pipe(
             ofType(cacheEntries),
             switchMap(({ collection }) =>
-                this.service
-                    .cacheEntries(collection)
-                    .pipe(map(() => cacheAssets({ collection }))),
+                !isEmpty(collection.entries) ||
+                !isEmpty(collection.deletedEntries)
+                    ? this.service
+                          .cacheEntries(collection)
+                          .pipe(map(() => cacheAssets({ collection })))
+                    : of(cacheAssets({ collection })),
             ),
         ),
     )
@@ -71,10 +62,31 @@ export class ContentfulEffects {
         this.actions$.pipe(
             ofType(cacheAssets),
             switchMap(({ collection }) =>
-                this.service
-                    .cacheAssets(collection)
-                    .pipe(map(() => cacheSuccess())),
+                !isEmpty(collection.assets) ||
+                !isEmpty(collection.deletedAssets)
+                    ? this.service.cacheAssets(collection).pipe(
+                          map(() =>
+                              cacheSuccess({
+                                  nextSyncToken: collection.nextSyncToken,
+                              }),
+                          ),
+                      )
+                    : of(
+                          cacheSuccess({
+                              nextSyncToken: collection.nextSyncToken,
+                          }),
+                      ),
             ),
         ),
+    )
+
+    cacheSuccess$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(cacheSuccess),
+                delay(1000),
+                tap(() => this.service.dismissSyncModal()),
+            ),
+        { dispatch: false },
     )
 }

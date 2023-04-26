@@ -34,13 +34,13 @@ export const reducer = createReducer(
         ...state,
         viewStatus: IContentfulViewState.Syncing,
     })),
-    on(syncSuccess, (state, { collection: { nextSyncToken } }) => ({
+    on(syncSuccess, (state) => ({
         ...state,
-        nextSyncToken,
         viewStatus: IContentfulViewState.Caching,
     })),
-    on(cacheSuccess, (state) => ({
+    on(cacheSuccess, (state, { nextSyncToken }) => ({
         ...state,
+        nextSyncToken,
         viewStatus: IContentfulViewState.Success,
     })),
 )
