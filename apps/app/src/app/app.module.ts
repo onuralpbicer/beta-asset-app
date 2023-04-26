@@ -20,10 +20,6 @@ import { StoreModule } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import metaReducers from './reducers'
-import { ContentfulModule } from './contentful/contentful.module'
-import { ContentfulEffects } from './contentful/contentful.effects'
-import { IonicStorageModule } from '@ionic/storage-angular'
-import { HttpClientModule } from '@angular/common/http'
 
 const firebaseOptions: FirebaseOptions = {
     apiKey: 'AIzaSyBuYSxXqEOR9Ewe7pVZGNUq2NtEHX6Iajw',
@@ -51,13 +47,10 @@ const firebaseOptions: FirebaseOptions = {
                 },
             },
         ),
-        EffectsModule.forRoot([ContentfulEffects]),
+        EffectsModule.forRoot([]),
         StoreDevtoolsModule.instrument({
             maxAge: 25, // Retains last 25 states
         }),
-        IonicStorageModule.forRoot(),
-        ContentfulModule,
-        HttpClientModule,
     ],
     providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
     bootstrap: [AppComponent],
