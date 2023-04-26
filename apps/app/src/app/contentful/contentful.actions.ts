@@ -18,7 +18,4 @@ export const cacheAssets = createAction(
     props<{ collection: SyncCollection }>(),
 )
 
-export const cacheSuccess = createAction(
-    '[Contentful] Cache Success',
-    props<Pick<SyncCollection, 'nextSyncToken'>>(),
-)
+export const cacheSuccess = createAction('[Contentful] Cache Success')

@@ -10,6 +10,7 @@ import {
     map,
     delay,
     from,
+    isEmpty,
     combineLatest,
 } from 'rxjs'
 import { AuthService } from '../auth/auth.service'
@@ -22,11 +23,10 @@ import {
     SyncCollection,
     createClient,
 } from 'contentful'
-import { isNil, isEmpty } from 'rambda'
+import { isNil } from 'rambda'
 import { Storage } from '@ionic/storage-angular'
 import { HttpClient } from '@angular/common/http'
 import { blobToString } from '../util'
-import { SyncModalComponent } from '../sync-modal/sync-modal.component'
 
 const CONFIG: CreateClientParams = {
     space: 'v00lofp5qjmx',
@@ -39,27 +39,7 @@ type EntryOrAsset<T> = Entry<T> | Asset
 export class ContentfulService {
     private client = createClient(CONFIG)
 
-    private syncModal: HTMLIonModalElement | null = null
-
-    constructor(
-        private storage: Storage,
-        private http: HttpClient,
-        private modalController: ModalController,
-    ) {
-        this.modalController
-            .create({
-                component: SyncModalComponent,
-            })
-            .then((modal) => (this.syncModal = modal))
-    }
-
-    async dismissSyncModal() {
-        await this.syncModal?.dismiss()
-    }
-
-    async showSyncModal() {
-        await this.syncModal?.present()
-    }
+    constructor(private storage: Storage, private http: HttpClient) {}
 
     checkForUpdate(nextSyncToken: string | null) {
         return from(
@@ -105,13 +85,9 @@ export class ContentfulService {
     }
 
     private fetchAssets(assets: Array<Asset>) {
-        if (isEmpty(assets)) return of([])
         return combineLatest(
             assets
-                .map((asset) => ({
-                    ...asset,
-                    file: this.getAssetFile(asset),
-                }))
+                .map((asset) => ({ ...asset, file: this.getAssetFile(asset) }))
                 .map(({ file, ...asset }) =>
                     this.http
                         .get(`https:${file.url}?w=${window.innerWidth}`, {
@@ -132,7 +108,7 @@ export class ContentfulService {
     }
 
     cacheAssets(collection: SyncCollection) {
-        return this.fetchAssets(collection.assets).pipe(
+        return from(this.fetchAssets(collection.assets)).pipe(
             switchMap(() =>
                 this.removeDeletedEntries(collection.deletedAssets),
             ),
