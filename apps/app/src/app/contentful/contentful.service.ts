@@ -53,6 +53,27 @@ export class ContentfulService {
             .then((modal) => (this.syncModal = modal))
     }
 
+    private getEntryFields<T>(entry: EntryOrAsset<T>): T {
+        const fieldsWithLocale = (entry?.fields as any) ?? {}
+        return Object.entries(fieldsWithLocale).reduce(
+            (acc, [key, value]: [string, any]) => {
+                acc[key] = value.hasOwnProperty('en-US')
+                    ? value['en-US']
+                    : value
+
+                return acc
+            },
+            {} as any,
+        )
+    }
+
+    async getEntryById(id: string) {
+        const result = await this.storage.get(id)
+        const entry = JSON.parse(result)
+        const fields = this.getEntryFields(entry)
+        return { ...entry, fields }
+    }
+
     async dismissSyncModal() {
         await this.syncModal?.dismiss()
     }
@@ -126,9 +147,8 @@ export class ContentfulService {
         )
     }
 
-    private getAssetFile(asset: Asset): Asset['fields']['file'] {
-        const file = asset.fields.file as any
-        return file.hasOwnProperty('en-US') ? file['en-US'] : file
+    private getAssetFile(asset: Asset) {
+        return this.getEntryFields(asset).file
     }
 
     cacheAssets(collection: SyncCollection) {
