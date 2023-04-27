@@ -15,6 +15,7 @@
         <div
             class="list-item"
             *ngFor="let equipmentType of equipmentTypeList$ | async"
+            (click)="goToEquipmentType(equipmentType)"
         >
             {{ equipmentType.name }} ({{ equipmentType.equipments.length }})
         </div>

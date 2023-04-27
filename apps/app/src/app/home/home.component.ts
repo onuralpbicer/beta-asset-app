@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
+import { IonicModule, NavController } from '@ionic/angular'
 import { EquipmentTypesModule } from '../equipment-types/equipment-types.module'
 import { Store } from '@ngrx/store'
 import { initEquipmentTypes } from '../equipment-types/equipment-types.actions'
@@ -33,9 +33,10 @@ export class HomeComponent implements OnInit {
     public equipmentTypeList$!: Observable<IEquipmentType[]>
     public loading$!: Observable<boolean>
 
-    public readonly ViewStatus = ViewStatus
-
-    constructor(private equipmentTypesStore: Store<IEquipmentTypeListState>) {}
+    constructor(
+        private equipmentTypesStore: Store<IEquipmentTypeListState>,
+        private navController: NavController,
+    ) {}
 
     ngOnInit(): void {
         this.equipmentTypeList$ =
@@ -49,5 +50,9 @@ export class HomeComponent implements OnInit {
 
     loadEquipmentTypes() {
         this.equipmentTypesStore.dispatch(initEquipmentTypes())
+    }
+
+    goToEquipmentType(equipmentType: IEquipmentType) {
+        this.navController.navigateForward(['equipments', equipmentType.id])
     }
 }

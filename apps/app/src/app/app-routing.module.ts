@@ -29,6 +29,14 @@ const routes: Routes = [
             import('./home/home.component').then((m) => m.HomeComponent),
         ...canActivate(redirectToLogin),
     },
+    {
+        path: 'equipments/:id',
+        loadComponent: () =>
+            import('./equipment-list/equipment-list.component').then(
+                (m) => m.EquipmentListComponent,
+            ),
+        ...canActivate(redirectToLogin),
+    },
 ]
 
 @NgModule({
