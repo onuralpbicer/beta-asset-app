@@ -22,6 +22,7 @@ import {
     initializeAuth,
     provideAuth,
 } from '@angular/fire/auth'
+import { EquipmentTypesModule } from './equipment-types/equipment-types.module'
 
 const firebaseOptions: FirebaseOptions = {
     apiKey: 'AIzaSyBuYSxXqEOR9Ewe7pVZGNUq2NtEHX6Iajw',
