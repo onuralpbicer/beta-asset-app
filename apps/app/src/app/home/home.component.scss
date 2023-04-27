@@ -4,20 +4,6 @@
     place-items: center;
 }
 
-.list-container {
-    padding-inline: 2rem;
+@import '../mixins/item-list.scss';
 
-    .list-item {
-        padding: 1rem 2rem;
-        background: var(--ion-color-step-200);
-        border-left: 4px solid var(--ion-color-primary-shade);
-
-        --border-radius: 4px;
-        border-top-left-radius: var(--border-radius);
-        border-bottom-left-radius: var(--border-radius);
-
-        &:not(:first-of-type) {
-            margin-top: 1rem;
-        }
-    }
-}
+@include item-list;
