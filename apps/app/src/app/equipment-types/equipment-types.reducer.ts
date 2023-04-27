@@ -1,5 +1,11 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity'
-import { createReducer, on, Action } from '@ngrx/store'
+import {
+    createReducer,
+    on,
+    Action,
+    createFeatureSelector,
+    createSelector,
+} from '@ngrx/store'
 
 import * as EquipmentTypesActions from './equipment-types.actions'
 import { ViewStatus } from '../model'
@@ -33,4 +39,19 @@ export const reducer = createReducer(
         viewStatus: ViewStatus.Success,
     })),
     on(EquipmentTypesActions.initEquipmentTypesFail, (state) => initialState),
+)
+
+const entitySelectors = adapter.getSelectors()
+
+const selector = createFeatureSelector<IEquipmentTypeListState>(
+    EQUIPMENT_TYPES_FEATURE_KEY,
+)
+
+export const selectEquipmentListViewStatus = createSelector(
+    selector,
+    (state) => state.viewStatus,
+)
+
+export const selectEquipmentList = createSelector(selector, (state) =>
+    entitySelectors.selectAll(state.entities),
 )
