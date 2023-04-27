@@ -1,2 +1,12 @@
-<p>home works!</p>
-<ion-button (click)="logout()">logout</ion-button>
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Home</ion-title>
+    </ion-toolbar>
+</ion-header>
+<beta-asset-app-side-menu [contentId]="contentId"></beta-asset-app-side-menu>
+<ion-content [forceOverscroll]="false" [id]="contentId" class="ion-padding">
+    main content
+</ion-content>

@@ -19,6 +19,8 @@ const initialState = {
     entities: adapter.getInitialState(),
 }
 
+export type IEquipmentTypeListState = typeof initialState
+
 export const reducer = createReducer(
     initialState,
     on(EquipmentTypesActions.initEquipmentTypes, (state) => ({
