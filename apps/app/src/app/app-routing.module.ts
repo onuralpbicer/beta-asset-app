@@ -30,7 +30,7 @@ const routes: Routes = [
         ...canActivate(redirectToLogin),
     },
     {
-        path: 'equipments/:id',
+        path: 'equipments/:equipmentTypeId',
         loadComponent: () =>
             import('./equipment-list/equipment-list.component').then(
                 (m) => m.EquipmentListComponent,

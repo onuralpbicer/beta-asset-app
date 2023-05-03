@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { CreateClientParams, createClient } from 'contentful'
-import { from, map } from 'rxjs'
+import { from, map, tap } from 'rxjs'
 import { IEquipmentTypeListEntry } from '../model'
 
 const CONFIG: CreateClientParams = {
@@ -26,5 +26,11 @@ export class ContentfulService {
                 IContentfulContent.EquipmentTypeList,
             ),
         ).pipe(map((response) => response.fields.equipmentTypes))
+    }
+
+    getEquipment(id: string) {
+        return from(this.client.getEntry(id)).pipe(
+            tap((result) => console.log(result)),
+        )
     }
 }
