@@ -53,7 +53,7 @@ export class EquipmentListComponent implements OnInit {
             await this.contentfulService.getEntry<IEquipmentType>(id)
 
         const list: ListPageListItem[] = []
-        for (const link of equipmentTypeWithLinks.fields.equipments) {
+        for (const link of equipmentTypeWithLinks.fields.equipments ?? []) {
             const equipment = await this.contentfulService.getEntry<
                 Pick<ListPageListItem, 'name'>
             >(link.sys.id)
