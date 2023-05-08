@@ -3,6 +3,8 @@ import { Actions, ROOT_EFFECTS_INIT, createEffect, ofType } from '@ngrx/effects'
 import {
     catchError,
     combineLatest,
+    delay,
+    filter,
     map,
     of,
     switchMap,
@@ -17,7 +19,13 @@ import {
 } from './sync.actions'
 import { ContentfulService } from '../services/contentful.service'
 import { Store } from '@ngrx/store'
-import { ISyncState, selectNextSyncToken } from './sync.reducer'
+import {
+    ISyncState,
+    ISyncStatus,
+    selectNextSyncToken,
+    selectSyncStatus,
+} from './sync.reducer'
+import { equals, isNil } from 'rambda'
 
 @Injectable()
 export class SyncEffects {
@@ -25,10 +33,14 @@ export class SyncEffects {
     contentService = inject(ContentfulService)
     syncStore = inject(Store<ISyncState>)
 
-    // TODO: probably remove this
-    login$ = createEffect(() =>
+    init$ = createEffect(() =>
         this.actions$.pipe(
             ofType(ROOT_EFFECTS_INIT),
+            withLatestFrom(this.syncStore.select(selectSyncStatus)),
+            filter(
+                ([, status]) =>
+                    isNil(status) || equals(status, ISyncStatus.Initial),
+            ),
             map(() => syncStart()),
         ),
     )
@@ -37,6 +49,7 @@ export class SyncEffects {
         this.actions$.pipe(
             ofType(syncStart),
             withLatestFrom(this.syncStore.select(selectNextSyncToken)),
+            delay(1000),
             tap(([, nextSyncToken]) =>
                 console.log('nextSyncToken', nextSyncToken),
             ),

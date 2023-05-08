@@ -1,0 +1,19 @@
+<div class="container">
+    <ion-text *ngIf="(syncStatus$ | async) === SyncStatus.Checking"
+        >Checking for new equipment information</ion-text
+    >
+    <ion-text *ngIf="(syncStatus$ | async) === SyncStatus.Syncing"
+        >Synchronizing equipment information</ion-text
+    >
+    <ion-spinner *ngIf="isLoading$ | async"></ion-spinner>
+
+    <ng-container *ngIf="(syncStatus$ | async) === SyncStatus.Success">
+        <ion-text>Sync successful</ion-text>
+        <ion-icon name="checkmark-outline"></ion-icon>
+    </ng-container>
+
+    <ng-container *ngIf="(syncStatus$ | async) === SyncStatus.Failure">
+        <ion-text>Sync failed, please try again later</ion-text>
+        <ion-icon name="close-outline"></ion-icon>
+    </ng-container>
+</div>

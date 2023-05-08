@@ -59,3 +59,8 @@ export const selectNextSyncToken = createSelector(
     selector,
     (state) => state[NEXT_SYNC_TOKEN_KEY],
 )
+
+export const selectSyncStatus = createSelector(
+    selector,
+    (state) => state.status,
+)
