@@ -1,0 +1,9 @@
+.loading-container {
+    display: grid;
+    height: 100%;
+    place-items: center;
+}
+
+@import '../mixins/item-list.scss';
+
+@include item-list;

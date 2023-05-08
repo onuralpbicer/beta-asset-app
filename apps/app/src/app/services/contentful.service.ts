@@ -7,7 +7,6 @@ import {
     createClient,
 } from 'contentful'
 import { combineLatest, from, map, switchMap, tap } from 'rxjs'
-import { IEquipmentTypeEntry, IEquipmentTypeListEntry } from '../model'
 import { isNil, isEmpty } from 'rambda'
 import { Storage } from '@ionic/storage-angular'
 import { HttpClient } from '@angular/common/http'

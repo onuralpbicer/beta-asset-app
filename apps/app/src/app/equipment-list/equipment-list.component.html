@@ -9,5 +9,12 @@
     </ion-toolbar>
 </ion-header>
 <ion-content [forceOverscroll]="false" class="ion-padding">
-    <p>equipment-list works!</p>
+    <div class="loading-container" *ngIf="loading">
+        <ion-spinner></ion-spinner>
+    </div>
+    <div class="list-container" *ngIf="!loading">
+        <div class="list-item" *ngFor="let equipment of equipments">
+            {{ equipment.name }}
+        </div>
+    </div>
 </ion-content>

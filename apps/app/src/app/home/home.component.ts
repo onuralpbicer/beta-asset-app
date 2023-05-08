@@ -3,7 +3,6 @@ import { IonicModule, NavController } from '@ionic/angular'
 import { Store } from '@ngrx/store'
 import { SideMenuComponent } from '../side-menu/side-menu.component'
 import { Observable, map } from 'rxjs'
-import { ViewStatus } from '../model'
 import { equals } from 'rambda'
 import { CommonModule } from '@angular/common'
 import {
@@ -12,14 +11,10 @@ import {
 } from '../services/contentful.service'
 import { SyncService } from '../services/sync.service'
 import { Link, RichTextDataTarget } from 'contentful'
+import { ListPageListItem } from '../model'
 
 interface EquipmentTypesList {
     equipmentTypes: Array<RichTextDataTarget>
-}
-
-interface IEquipmentType {
-    id: string
-    name: string
 }
 
 @Component({
@@ -34,7 +29,7 @@ export class HomeComponent implements OnInit {
 
     public loading = false
 
-    public equipmentTypes: Array<IEquipmentType> = []
+    public equipmentTypes: Array<ListPageListItem> = []
 
     constructor(
         private contentfulService: ContentfulService,
@@ -55,20 +50,20 @@ export class HomeComponent implements OnInit {
                 IContentfulContent.EquipmentTypeList,
             )
 
-        const list: IEquipmentType[] = []
+        const list: ListPageListItem[] = []
 
         for (const link of listWithLinks.fields.equipmentTypes) {
             const equipmentType = await this.contentfulService.getEntry<
-                Pick<IEquipmentType, 'name'>
+                Pick<ListPageListItem, 'name'>
             >(link.sys.id)
-            list.push({ ...equipmentType.fields, id: link.sys.id })
+            list.push({ ...equipmentType.fields, id: equipmentType.sys.id })
         }
 
         this.equipmentTypes = list
         this.loading = false
     }
 
-    goToEquipmentType(equipmentType: IEquipmentType) {
+    goToEquipmentType(equipmentType: ListPageListItem) {
         this.navController.navigateForward(['equipments', equipmentType.id])
     }
 }
