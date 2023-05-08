@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { CreateClientParams, createClient } from 'contentful'
 import { from, map, tap } from 'rxjs'
-import { IEquipmentTypeListEntry } from '../model'
+import { IEquipmentTypeEntry, IEquipmentTypeListEntry } from '../model'
 
 const CONFIG: CreateClientParams = {
     space: 'v00lofp5qjmx',
@@ -25,7 +25,16 @@ export class ContentfulService {
             this.client.getEntry<IEquipmentTypeListEntry>(
                 IContentfulContent.EquipmentTypeList,
             ),
-        ).pipe(map((response) => response.fields.equipmentTypes))
+        ).pipe(
+            tap((result) => console.log(result)),
+            map((response) => response.fields.equipmentTypes),
+        )
+    }
+
+    getEquipmentType(id: string) {
+        return from(this.client.getEntry<IEquipmentTypeEntry>(id)).pipe(
+            tap((result) => console.log(result)),
+        )
     }
 
     getEquipment(id: string) {
