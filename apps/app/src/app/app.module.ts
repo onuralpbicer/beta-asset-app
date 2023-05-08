@@ -23,6 +23,10 @@ import {
     provideAuth,
 } from '@angular/fire/auth'
 import { CommonModule } from '@angular/common'
+import { SyncModule } from './sync/sync.module'
+import { SyncEffects } from './sync/sync.effects'
+import { IonicStorageModule } from '@ionic/storage-angular'
+import { HttpClientModule } from '@angular/common/http'
 
 const firebaseOptions: FirebaseOptions = {
     apiKey: 'AIzaSyBuYSxXqEOR9Ewe7pVZGNUq2NtEHX6Iajw',
@@ -47,7 +51,7 @@ const firebaseOptions: FirebaseOptions = {
                 },
             },
         ),
-        EffectsModule.forRoot([]),
+        EffectsModule.forRoot([SyncEffects]),
         StoreDevtoolsModule.instrument({
             maxAge: 25, // Retains last 25 states
         }),
@@ -56,6 +60,9 @@ const firebaseOptions: FirebaseOptions = {
                 persistence: browserLocalPersistence,
             }),
         ),
+        HttpClientModule,
+        IonicStorageModule.forRoot(),
+        SyncModule,
     ],
     providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
     bootstrap: [AppComponent],
