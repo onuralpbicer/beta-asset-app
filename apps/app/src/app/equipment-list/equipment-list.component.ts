@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { Component, OnInit } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
+import { IonicModule, NavController } from '@ionic/angular'
 import { Store } from '@ngrx/store'
 import { ActivatedRoute } from '@angular/router'
 import { map, switchMap } from 'rxjs'
@@ -30,6 +30,7 @@ export class EquipmentListComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private contentfulService: ContentfulService,
         private syncService: SyncService,
+        private navController: NavController,
     ) {}
 
     ngOnInit(): void {
@@ -57,10 +58,15 @@ export class EquipmentListComponent implements OnInit {
             const equipment = await this.contentfulService.getEntry<
                 Pick<ListPageListItem, 'name'>
             >(link.sys.id)
+            console.log(equipment)
             list.push({ ...equipment.fields, id: equipment.sys.id })
         }
 
         this.equipments = list
         this.loading = false
+    }
+
+    goToEquipment(equipment: ListPageListItem) {
+        this.navController.navigateForward(['equipment', equipment.id])
     }
 }

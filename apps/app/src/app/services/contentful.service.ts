@@ -6,8 +6,8 @@ import {
     SyncCollection,
     createClient,
 } from 'contentful'
-import { combineLatest, from, map, switchMap, tap } from 'rxjs'
-import { isNil, isEmpty } from 'rambda'
+import { combineLatest, from, map, of, switchMap, tap } from 'rxjs'
+import { isNil, isEmpty, propEq } from 'rambda'
 import { Storage } from '@ionic/storage-angular'
 import { HttpClient } from '@angular/common/http'
 import { blobToString } from '../util'
@@ -103,9 +103,14 @@ export class ContentfulService {
     }
 
     cacheAssets(assets: Array<Asset>) {
+        if (propEq('length', 0, assets)) return of([])
+
         return combineLatest(
             assets
-                .map((asset) => ({ ...asset, file: this.getAssetFile(asset) }))
+                .map((asset) => ({
+                    ...asset,
+                    file: this.getAssetFile(asset),
+                }))
                 .map(({ file, ...asset }) =>
                     this.http
                         .get(`https:${file.url}?w=${window.innerWidth}`, {

@@ -5,20 +5,18 @@
             defaultHref="home"
             text=""
         ></ion-back-button>
-        <ion-title>Equipments</ion-title>
+        <ion-title>
+            <beta-asset-app-loading-icon
+                *ngIf="loading"
+            ></beta-asset-app-loading-icon>
+            <ng-container *ngIf="!loading">{{
+                baseEquipment?.name
+            }}</ng-container>
+        </ion-title>
     </ion-toolbar>
 </ion-header>
 <ion-content [forceOverscroll]="false" class="ion-padding">
     <div class="loading-container" *ngIf="loading">
         <ion-spinner></ion-spinner>
-    </div>
-    <div class="list-container" *ngIf="!loading">
-        <div
-            class="list-item"
-            *ngFor="let equipment of equipments"
-            (click)="goToEquipment(equipment)"
-        >
-            {{ equipment.name }}
-        </div>
     </div>
 </ion-content>
