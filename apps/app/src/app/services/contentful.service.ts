@@ -32,6 +32,27 @@ export class ContentfulService {
 
     constructor(private storage: Storage, private http: HttpClient) {}
 
+    private getEntryFields<T>(entry: EntryOrAsset<T>): T {
+        const fieldsWithLocale = (entry?.fields as any) ?? {}
+        return Object.entries(fieldsWithLocale).reduce(
+            (acc, [key, value]: [string, any]) => {
+                acc[key] = value.hasOwnProperty('en-US')
+                    ? value['en-US']
+                    : value
+
+                return acc
+            },
+            {} as any,
+        )
+    }
+
+    async getEntry<T>(id: string): Promise<Entry<T>> {
+        const result = await this.storage.get(id)
+        const entry = JSON.parse(result)
+        const fields = this.getEntryFields(entry)
+        return { ...entry, fields }
+    }
+
     checkForUpdate(nextSyncToken: string | null) {
         return from(
             this.client.sync({

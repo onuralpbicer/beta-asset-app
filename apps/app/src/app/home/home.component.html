@@ -8,16 +8,16 @@
 </ion-header>
 <beta-asset-app-side-menu [contentId]="contentId"></beta-asset-app-side-menu>
 <ion-content [forceOverscroll]="false" [id]="contentId" class="ion-padding">
-    <div class="loading-container" *ngIf="loading$ | async">
+    <div class="loading-container" *ngIf="loading">
         <ion-spinner></ion-spinner>
     </div>
-    <div class="list-container" *ngIf="!(loading$ | async)">
-        <!-- <div
+    <div class="list-container" *ngIf="!loading">
+        <div
             class="list-item"
-            *ngFor="let equipmentType of equipmentTypeList$ | async"
+            *ngFor="let equipmentType of equipmentTypes"
             (click)="goToEquipmentType(equipmentType)"
         >
-            {{ equipmentType.name }} ({{ equipmentType.equipments.length }})
-        </div> -->
+            {{ equipmentType.name }}
+        </div>
     </div>
 </ion-content>
