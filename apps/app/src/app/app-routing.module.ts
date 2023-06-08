@@ -39,10 +39,34 @@ const routes: Routes = [
     },
     {
         path: 'equipment/:equipmentId',
-        loadComponent: () =>
-            import('./equipment/equipment.component').then(
-                (m) => m.EquipmentComponent,
-            ),
+        children: [
+            {
+                path: '',
+                loadComponent: () =>
+                    import('./equipment/equipment.component').then(
+                        (m) => m.EquipmentComponent,
+                    ),
+            },
+            {
+                path: 'maintenance',
+                children: [
+                    {
+                        path: '',
+                        loadComponent: () =>
+                            import('./maintenance/maintenance.component').then(
+                                (m) => m.MaintenanceComponent,
+                            ),
+                    },
+                    {
+                        path: ':id',
+                        loadComponent: () =>
+                            import('./maintenance/maintenance.component').then(
+                                (m) => m.MaintenanceComponent,
+                            ),
+                    },
+                ],
+            },
+        ],
         ...canActivate(redirectToLogin),
     },
 ]

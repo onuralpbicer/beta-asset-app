@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common'
 import { Component, OnInit } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
+import { IonicModule, NavController } from '@ionic/angular'
 import { ContentfulService } from '../services/contentful.service'
 import { SyncService } from '../services/sync.service'
 import { ActivatedRoute } from '@angular/router'
-import { map, switchMap } from 'rxjs'
+import { Observable, map, switchMap, take } from 'rxjs'
 import {
     IEquipmentBase,
     IEquipmentProperty,
@@ -32,24 +32,37 @@ export class EquipmentComponent implements OnInit {
 
     public equipmentProperties: IEquipmentProperty[] = []
 
+    public newMaintenanceLink$!: Observable<string>
+
     constructor(
         private activatedRoute: ActivatedRoute,
         private contentfulService: ContentfulService,
         private syncService: SyncService,
+        private navController: NavController,
     ) {}
 
     ngOnInit(): void {
-        this.syncService.syncd$
-            .pipe(
-                switchMap(() =>
-                    this.activatedRoute.params.pipe(
-                        map((params) => params['equipmentId']),
-                    ),
+        const id$ = this.syncService.syncd$.pipe(
+            switchMap(() =>
+                this.activatedRoute.params.pipe(
+                    map((params) => params['equipmentId']),
                 ),
-            )
-            .subscribe((id) => {
-                this.loadEquipment(id)
-            })
+            ),
+        )
+
+        id$.subscribe((id) => {
+            this.loadEquipment(id)
+        })
+
+        this.newMaintenanceLink$ = id$.pipe(
+            map((id) => `/equipment/${id}/maintenance`),
+        )
+    }
+
+    navigateToMaintenance(id?: string) {
+        this.newMaintenanceLink$.pipe(take(1)).subscribe((link) => {
+            this.navController.navigateForward(link + (id ? `/${id}` : ''))
+        })
     }
 
     async loadEquipment(id: string) {
