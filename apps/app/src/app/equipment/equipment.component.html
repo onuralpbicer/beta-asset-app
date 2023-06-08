@@ -10,7 +10,7 @@
                 *ngIf="loading"
             ></beta-asset-app-loading-icon>
             <ng-container *ngIf="!loading">{{
-                baseEquipment?.name
+                equipmentBase?.name
             }}</ng-container>
         </ion-title>
     </ion-toolbar>
@@ -19,4 +19,15 @@
     <div class="loading-container" *ngIf="loading">
         <ion-spinner></ion-spinner>
     </div>
+    <ng-container *ngIf="!loading && equipmentBase">
+        <h2>Properties</h2>
+        <beta-asset-app-equipment-property
+            [property]="equipmentProperty"
+            *ngFor="let equipmentProperty of equipmentProperties"
+        ></beta-asset-app-equipment-property>
+        <div class="maintenance-title">
+            <h2>Maintenances</h2>
+            <ion-button><ion-icon name="add"></ion-icon></ion-button>
+        </div>
+    </ng-container>
 </ion-content>

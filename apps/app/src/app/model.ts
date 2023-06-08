@@ -13,4 +13,20 @@ export interface IEquipmentBase {
     location: string
     serialNumber: string
     type: ILink
+    extraProperties: Array<ILink>
+}
+
+export enum IEquipmentPropertyTypes {
+    TEXT = 'Text',
+    NUMBER = 'Number',
+    DATE = 'Date',
+}
+
+export interface IEquipmentProperty {
+    description: string
+    type: IEquipmentPropertyTypes
+    unit?: string
+    textValue?: string
+    numberValue?: number
+    dateValue?: Date
 }

@@ -5,16 +5,27 @@
         "default": {
             "runner": "nx/tasks-runners/default",
             "options": {
-                "cacheableOperations": ["build", "lint", "test", "e2e"]
+                "cacheableOperations": [
+                    "build",
+                    "lint",
+                    "test",
+                    "e2e"
+                ]
             }
         }
     },
     "targetDefaults": {
         "build": {
-            "dependsOn": ["^build"]
+            "dependsOn": [
+                "^build"
+            ]
         },
         "test": {
-            "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"]
+            "inputs": [
+                "default",
+                "^default",
+                "{workspaceRoot}/jest.preset.js"
+            ]
         }
     },
     "generators": {
@@ -31,5 +42,6 @@
         "@nrwl/angular:component": {
             "style": "scss"
         }
-    }
+    },
+    "defaultProject": "app"
 }

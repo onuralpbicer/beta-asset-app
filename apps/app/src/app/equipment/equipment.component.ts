@@ -5,22 +5,32 @@ import { ContentfulService } from '../services/contentful.service'
 import { SyncService } from '../services/sync.service'
 import { ActivatedRoute } from '@angular/router'
 import { map, switchMap } from 'rxjs'
-import { IEquipmentBase } from '../model'
+import {
+    IEquipmentBase,
+    IEquipmentProperty,
+    IEquipmentPropertyTypes,
+} from '../model'
 import { LoadingIconComponent } from '../loading-icon/loading-icon.component'
+import { EquipmentPropertyComponent } from './equipment-property/equipment-property.component'
 
 @Component({
     selector: 'beta-asset-app-equipment',
     templateUrl: './equipment.component.html',
     styleUrls: ['./equipment.component.scss'],
     standalone: true,
-    imports: [CommonModule, IonicModule, LoadingIconComponent],
+    imports: [
+        CommonModule,
+        IonicModule,
+        LoadingIconComponent,
+        EquipmentPropertyComponent,
+    ],
 })
 export class EquipmentComponent implements OnInit {
     public loading = false
 
-    public equipmentName = ''
+    public equipmentBase: IEquipmentBase | null = null
 
-    public baseEquipment: IEquipmentBase | null = null
+    public equipmentProperties: IEquipmentProperty[] = []
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -48,8 +58,43 @@ export class EquipmentComponent implements OnInit {
         const equipmentWithLinks =
             await this.contentfulService.getEntry<IEquipmentBase>(id)
 
-        console.log(equipmentWithLinks)
-        this.baseEquipment = equipmentWithLinks.fields
+        this.equipmentBase = equipmentWithLinks.fields
+        console.log(this.equipmentBase)
+
+        this.equipmentProperties.push(
+            {
+                description: 'Cihaz adi',
+                type: IEquipmentPropertyTypes.TEXT,
+                textValue: this.equipmentBase.name,
+            },
+            {
+                description: 'Cihaz Markasi',
+                type: IEquipmentPropertyTypes.TEXT,
+                textValue: this.equipmentBase.brand,
+            },
+            {
+                description: 'Cihaz Mahali',
+                type: IEquipmentPropertyTypes.TEXT,
+                textValue: this.equipmentBase.location,
+            },
+            {
+                description: 'Seri No',
+                type: IEquipmentPropertyTypes.TEXT,
+                textValue: this.equipmentBase.serialNumber,
+            },
+        )
+
+        await Promise.all(
+            equipmentWithLinks.fields.extraProperties.map(async (property) => {
+                const entry =
+                    await this.contentfulService.getEntry<IEquipmentProperty>(
+                        property.sys.id,
+                    )
+                this.equipmentProperties.push(entry.fields)
+            }),
+        )
+
+        console.log(this.equipmentProperties)
 
         this.loading = false
     }

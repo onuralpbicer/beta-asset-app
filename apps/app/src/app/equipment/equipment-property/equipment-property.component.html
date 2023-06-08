@@ -1,0 +1,18 @@
+<ion-item [ngSwitch]="property.type" *ngIf="property">
+    <ion-label>
+        <h3>
+            {{ property.description }}
+            <span *ngIf="property.unit">({{ property.unit }})</span>
+        </h3>
+
+        <p *ngSwitchCase="IEquipmentPropertyType.TEXT">
+            {{ property.textValue }}
+        </p>
+        <p *ngSwitchCase="IEquipmentPropertyType.NUMBER">
+            {{ property.numberValue }}
+        </p>
+        <p *ngSwitchCase="IEquipmentPropertyType.DATE">
+            {{ property.dateValue | date }}
+        </p>
+    </ion-label>
+</ion-item>

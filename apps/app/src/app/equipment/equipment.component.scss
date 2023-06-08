@@ -3,3 +3,18 @@
     height: 100%;
     place-items: center;
 }
+
+h2 {
+    margin-top: 0rem;
+}
+
+div.maintenance-title {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+        margin: 0;
+    }
+}
