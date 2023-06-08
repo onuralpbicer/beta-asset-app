@@ -1,12 +1,11 @@
 <ion-header>
     <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
+        <ion-buttons slot="start" (click)="logout()">
+            <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
         </ion-buttons>
         <ion-title>Equipment Types</ion-title>
     </ion-toolbar>
 </ion-header>
-<beta-asset-app-side-menu [contentId]="contentId"></beta-asset-app-side-menu>
 <ion-content [forceOverscroll]="false" [id]="contentId" class="ion-padding">
     <div class="loading-container" *ngIf="loading">
         <ion-spinner></ion-spinner>

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core'
-import { IonicModule, NavController } from '@ionic/angular'
+import { AlertController, IonicModule, NavController } from '@ionic/angular'
 import { Store } from '@ngrx/store'
-import { SideMenuComponent } from '../side-menu/side-menu.component'
 import { Observable, map } from 'rxjs'
 import { equals } from 'rambda'
 import { CommonModule } from '@angular/common'
@@ -12,6 +11,7 @@ import {
 import { SyncService } from '../services/sync.service'
 import { Link, RichTextDataTarget } from 'contentful'
 import { ListPageListItem } from '../model'
+import { AuthService } from '../services/auth.service'
 
 interface EquipmentTypesList {
     equipmentTypes: Array<RichTextDataTarget>
@@ -22,7 +22,7 @@ interface EquipmentTypesList {
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
     standalone: true,
-    imports: [CommonModule, IonicModule, SideMenuComponent],
+    imports: [CommonModule, IonicModule],
 })
 export class HomeComponent implements OnInit {
     public readonly contentId = 'main-page-content'
@@ -35,11 +35,43 @@ export class HomeComponent implements OnInit {
         private contentfulService: ContentfulService,
         private syncService: SyncService,
         private navController: NavController,
+        private auth: AuthService,
+        private alertController: AlertController,
     ) {}
 
     ngOnInit(): void {
         this.syncService.syncd$.subscribe(() => {
             this.loadEquipmentTypes()
+        })
+    }
+
+    async logout() {
+        const alert = await this.alertController.create({
+            header: 'Logout',
+            message: 'Are you sure you want to logout?',
+            buttons: [
+                {
+                    role: 'cancel',
+                    text: 'Cancel',
+                },
+                {
+                    text: 'Logout',
+                },
+            ],
+        })
+
+        await alert.present()
+
+        const { role } = await alert.onDidDismiss()
+
+        if (role) {
+            return
+        }
+
+        this.auth.logout().subscribe({
+            next: () => {
+                this.navController.navigateBack(['login'])
+            },
         })
     }
 
