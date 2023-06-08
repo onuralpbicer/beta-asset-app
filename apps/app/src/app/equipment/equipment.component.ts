@@ -67,6 +67,8 @@ export class EquipmentComponent implements OnInit {
 
     async loadEquipment(id: string) {
         this.loading = true
+        this.equipmentBase = null
+        this.equipmentProperties = []
 
         const equipmentWithLinks =
             await this.contentfulService.getEntry<IEquipmentBase>(id)
