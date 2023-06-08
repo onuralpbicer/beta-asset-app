@@ -1,0 +1,7 @@
+{
+  "name": "beta-asset-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
