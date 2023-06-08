@@ -39,7 +39,9 @@ const firebaseOptions: FirebaseOptions = {
     declarations: [AppComponent],
     imports: [
         BrowserModule,
-        IonicModule.forRoot(),
+        IonicModule.forRoot({
+            mode: 'ios',
+        }),
         AppRoutingModule,
         provideFirebaseApp(() => initializeApp(firebaseOptions)),
         StorageModule,
