@@ -116,6 +116,7 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
                 map((params) => params['equipmentId']),
             )
             .subscribe((equipmentId) => {
+                this.submitted = true
                 this.maintenanceService.sendMaintenance(this.form, equipmentId)
             })
     }

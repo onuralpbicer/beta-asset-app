@@ -1,3 +1,5 @@
+export const FIRESTORE_COLLECTION_NAME = 'maintenances'
+
 export function blobToString(blob: Blob, type?: string) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader()

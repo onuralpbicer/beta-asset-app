@@ -53,3 +53,9 @@ export interface IMaintenanceReport {
     equipmentId: string
     tasks: Array<IMaintenanceTask>
 }
+
+export interface IMaintenanceSummary {
+    id: string
+    type: string
+    date: Date
+}

@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core'
 import { FormGroup } from '@angular/forms'
 import { IMaintenanceReport } from '../model'
 import { AuthService } from '../services/auth.service'
-import { Observable, map } from 'rxjs'
-import { Storage, ref, uploadString } from '@angular/fire/storage'
 import { NavController } from '@ionic/angular'
+import { doc, getFirestore, setDoc } from '@angular/fire/firestore'
+import { v4 as uuid } from 'uuid'
+import { omit } from 'rambda'
+import { FIRESTORE_COLLECTION_NAME } from '../util'
 
 @Injectable({
     providedIn: 'root',
@@ -12,7 +14,6 @@ import { NavController } from '@ionic/angular'
 export class MaintenanceService {
     constructor(
         private authService: AuthService,
-        private afStorage: Storage,
         private navController: NavController,
     ) {}
 
@@ -36,17 +37,25 @@ export class MaintenanceService {
                 return
             }
 
+            const maintenanceId = uuid()
+
             const report = this.createMaintenanceJson(form, email, equipmentId)
 
-            const date = report.date
-            const r = ref(
-                this.afStorage,
-                `${equipmentId}/${date.getFullYear()}/${
-                    date.getMonth() + 1
-                }/${date.getDate()}/${date.getHours()}:${date.getMinutes()}.json`,
+            const document = doc(
+                getFirestore(),
+                FIRESTORE_COLLECTION_NAME,
+                maintenanceId,
             )
-
-            uploadString(r, JSON.stringify(report)).then(() => {
+            setDoc(document, {
+                date: new Date(),
+                user: email,
+                equipmentId: equipmentId,
+                type: form.value.type,
+                tasks: form.value.maintenanceTasks.map((task: any) => ({
+                    ...omit(['uygun'], task),
+                    uygun: task.uygun === 'true',
+                })),
+            }).then(() => {
                 this.navController.navigateBack(`/equipment/${equipmentId}`)
             })
         })

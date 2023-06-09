@@ -9,18 +9,20 @@ import {
     IEquipmentBase,
     IEquipmentProperty,
     IEquipmentPropertyTypes,
+    IMaintenanceSummary,
 } from '../model'
 import { LoadingIconComponent } from '../loading-icon/loading-icon.component'
 import { EquipmentPropertyComponent } from './equipment-property/equipment-property.component'
 import { EquipmentService } from './equipment.service'
 import {
-    Storage,
-    ref,
-    list,
-    listAll,
-    StorageReference,
-} from '@angular/fire/storage'
-import { path } from 'rambda'
+    collection,
+    getDocs,
+    getFirestore,
+    orderBy,
+    query,
+    where,
+} from '@angular/fire/firestore'
+import { FIRESTORE_COLLECTION_NAME } from '../util'
 
 @Component({
     selector: 'beta-asset-app-equipment',
@@ -43,7 +45,7 @@ export class EquipmentComponent implements OnInit {
 
     public newMaintenanceLink$!: Observable<string>
 
-    public maintenances$!: Observable<Date[]>
+    public maintenances$!: Observable<IMaintenanceSummary[]>
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -51,7 +53,6 @@ export class EquipmentComponent implements OnInit {
         private syncService: SyncService,
         private navController: NavController,
         private equipmentService: EquipmentService,
-        private afStorage: Storage,
     ) {}
 
     ngOnInit(): void {
@@ -64,27 +65,7 @@ export class EquipmentComponent implements OnInit {
         )
 
         this.maintenances$ = id$.pipe(
-            switchMap((id) =>
-                from(this.fetchMaintenanceSummaries(id)).pipe(
-                    map((paths) =>
-                        paths.map((path) => {
-                            const [, year, month, day, time] = path.split('/')
-                            const [hour, min] = time
-                                .replace('.json', '')
-                                .split(':')
-
-                            const date = new Date(
-                                Number(year),
-                                Number(month) - 1,
-                                Number(day),
-                                Number(hour),
-                                Number(min),
-                            )
-                            return date
-                        }),
-                    ),
-                ),
-            ),
+            switchMap((id) => from(this.fetchMaintenanceSummaries(id))),
         )
 
         id$.subscribe((id) => {
@@ -150,25 +131,25 @@ export class EquipmentComponent implements OnInit {
     }
 
     public async fetchMaintenanceSummaries(id: string) {
-        const storageRef = ref(this.afStorage, id)
+        const q = query(
+            collection(getFirestore(), FIRESTORE_COLLECTION_NAME),
+            where('equipmentId', '==', id),
+            orderBy('date', 'desc'),
+        )
 
-        const files: StorageReference[] = []
+        const querySnapshot = await getDocs(q)
 
-        // const result = await list(storageRef)
-        async function fetchPrefix(ref: StorageReference) {
-            const result = await listAll(ref)
+        const maintenances: IMaintenanceSummary[] = []
 
-            files.push(...result.items)
+        querySnapshot.forEach((doc) => {
+            const data = doc.data()
+            maintenances.push({
+                id: doc.id,
+                type: data['type'],
+                date: data['date'].toDate(),
+            })
+        })
 
-            if (result.prefixes.length) {
-                for (const prefix of result.prefixes) {
-                    await fetchPrefix(prefix)
-                }
-            }
-        }
-
-        await fetchPrefix(storageRef)
-
-        return files.map((file) => file.fullPath)
+        return maintenances
     }
 }

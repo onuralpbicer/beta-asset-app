@@ -36,7 +36,7 @@
             class="maintenance-item"
             *ngFor="let maintenance of maintenances$ | async"
         >
-            {{ maintenance | date : 'cccc, dd MMMM yyyy, HH:mm' }}
+            {{ maintenance.date | date : 'cccc, dd MMMM yyyy, HH:mm' }}
         </div>
     </ng-container>
 </ion-content>

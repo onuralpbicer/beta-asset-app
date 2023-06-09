@@ -13,7 +13,6 @@ import {
     FirebaseOptions,
     getApp,
 } from '@angular/fire/app'
-import { StorageModule } from '@angular/fire/storage'
 import { StoreModule } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
@@ -23,7 +22,7 @@ import {
     initializeAuth,
     provideAuth,
 } from '@angular/fire/auth'
-import { CommonModule } from '@angular/common'
+import { FirestoreModule } from '@angular/fire/firestore'
 import { SyncModule } from './sync/sync.module'
 import { SyncEffects } from './sync/sync.effects'
 import { IonicStorageModule } from '@ionic/storage-angular'
@@ -36,6 +35,7 @@ const firebaseOptions: FirebaseOptions = {
     apiKey: 'AIzaSyBuYSxXqEOR9Ewe7pVZGNUq2NtEHX6Iajw',
     appId: 'beta-asset-app',
     storageBucket: 'gs://beta-asset-app.appspot.com',
+    projectId: 'beta-asset-app',
 }
 
 @NgModule({
@@ -47,7 +47,6 @@ const firebaseOptions: FirebaseOptions = {
         }),
         AppRoutingModule,
         provideFirebaseApp(() => initializeApp(firebaseOptions)),
-        StorageModule,
         StoreModule.forRoot(
             {},
             {
@@ -67,6 +66,7 @@ const firebaseOptions: FirebaseOptions = {
                 persistence: browserLocalPersistence,
             }),
         ),
+        FirestoreModule,
         HttpClientModule,
         IonicStorageModule.forRoot(),
         SyncModule,
