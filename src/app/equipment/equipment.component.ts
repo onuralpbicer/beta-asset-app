@@ -70,7 +70,6 @@ export class EquipmentComponent implements OnInit {
 
         id$.subscribe((id) => {
             this.loadEquipment(id)
-            this.fetchMaintenanceSummaries(id)
         })
 
         this.newMaintenanceLink$ = id$.pipe(
