@@ -13,6 +13,52 @@
         </ion-title>
     </ion-toolbar>
 </ion-header>
-<ion-content>
-    <ion-button (click)="test()">test</ion-button>
+<ion-content [forceOverscroll]="false" class="ion-padding" [formGroup]="form">
+    <h2>Bakim Bilgileri</h2>
+    <ion-item>
+        <ion-select
+            label="Bakim Tipi"
+            labelPlacement="stacked"
+            placeholder="Bakim tipini secin"
+            formControlName="type"
+        >
+            <ion-select-option value="Periyodik">Periyodik</ion-select-option>
+            <ion-select-option value="Ariza">Ariza</ion-select-option>
+        </ion-select>
+    </ion-item>
+    <h2>Yapilacak Isler</h2>
+    <ng-container *ngFor="let task of maintenanceTasks.controls; let i = index">
+        <div class="task" [formGroup]="task">
+            <h4>{{ task.get('name')?.value }}</h4>
+
+            <ion-segment formControlName="uygun">
+                <ion-segment-button [value]="true">
+                    <ion-label>Uygun</ion-label>
+                </ion-segment-button>
+                <ion-segment-button [value]="false">
+                    <ion-label>Uygun Degil</ion-label>
+                </ion-segment-button>
+            </ion-segment>
+
+            <ion-segment
+                formControlName="yapilanIs"
+                *ngIf="(task.get('uygun')?.valueChanges | async) === 'false'"
+            >
+                <ion-segment-button value="Onarildi">
+                    <ion-label>Onarildi</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="Yenilendi">
+                    <ion-label>Yenilendi</ion-label>
+                </ion-segment-button>
+            </ion-segment>
+
+            <ion-input
+                formControlName="description"
+                label="Aciklama"
+                labelPlacement="stacked"
+            ></ion-input>
+        </div>
+    </ng-container>
+
+    <ion-button (click)="submit()">Gonder</ion-button>
 </ion-content>

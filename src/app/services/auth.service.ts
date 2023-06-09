@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Auth, User, signInWithEmailAndPassword } from '@angular/fire/auth'
 
-import { BehaviorSubject, from } from 'rxjs'
+import { BehaviorSubject, from, map } from 'rxjs'
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,6 +13,10 @@ export class AuthService {
         this.auth.onAuthStateChanged((credentials) => {
             this.authStateSubject.next(credentials)
         })
+    }
+
+    getUserEmail() {
+        return this.user$.pipe(map((user) => user?.email))
     }
 
     logout() {

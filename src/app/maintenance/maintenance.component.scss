@@ -1,0 +1,10 @@
+.task {
+    border-bottom: 1px solid white;
+    padding-bottom: 1rem;
+}
+
+ion-segment {
+    &:not(:last-of-type) {
+        margin-bottom: 0.5rem;
+    }
+}

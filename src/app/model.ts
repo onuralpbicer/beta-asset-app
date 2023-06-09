@@ -30,3 +30,26 @@ export interface IEquipmentProperty {
     numberValue?: number
     dateValue?: Date
 }
+
+export interface IEquipmentType {
+    name: string
+    equipments: Array<ILink>
+    maintenanceTasks: Array<string>
+}
+
+type Nullable<T> = T | null
+
+export interface IMaintenanceTask {
+    name: string
+    description?: string
+    uygun: Nullable<boolean>
+    yapilanIs: Nullable<'Onarildi' | 'Yenilendi'>
+}
+
+export interface IMaintenanceReport {
+    date: Date
+    user: string
+    type: string
+    equipmentId: string
+    tasks: Array<IMaintenanceTask>
+}
