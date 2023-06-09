@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core'
+import { LOCALE_ID, NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { RouteReuseStrategy } from '@angular/router'
 
@@ -28,6 +28,9 @@ import { SyncModule } from './sync/sync.module'
 import { SyncEffects } from './sync/sync.effects'
 import { IonicStorageModule } from '@ionic/storage-angular'
 import { HttpClientModule } from '@angular/common/http'
+import { registerLocaleData } from '@angular/common'
+import localeTR from '@angular/common/locales/tr'
+registerLocaleData(localeTR)
 
 const firebaseOptions: FirebaseOptions = {
     apiKey: 'AIzaSyBuYSxXqEOR9Ewe7pVZGNUq2NtEHX6Iajw',
@@ -68,7 +71,13 @@ const firebaseOptions: FirebaseOptions = {
         IonicStorageModule.forRoot(),
         SyncModule,
     ],
-    providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+    providers: [
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+        {
+            provide: LOCALE_ID,
+            useValue: 'tr-TR',
+        },
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

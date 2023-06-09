@@ -2,10 +2,8 @@ import { CommonModule } from '@angular/common'
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { IonicModule } from '@ionic/angular'
 import { LoadingIconComponent } from '../loading-icon/loading-icon.component'
-import { Storage, ref, uploadString } from '@angular/fire/storage'
 import { ActivatedRoute } from '@angular/router'
 import { Subscription, from, map, switchMap, take } from 'rxjs'
-import { ContentfulService } from '../services/contentful.service'
 import { IEquipmentBase, IMaintenanceTask } from '../model'
 import { EquipmentService } from '../equipment/equipment.service'
 import { SyncService } from '../services/sync.service'
@@ -42,8 +40,6 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
 
     constructor(
         private activatedRoute: ActivatedRoute,
-        private afStorage: Storage,
-        private contentfulService: ContentfulService,
         private equipmentService: EquipmentService,
         private syncService: SyncService,
         private fb: FormBuilder,

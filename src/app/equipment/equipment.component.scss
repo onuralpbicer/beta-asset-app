@@ -9,15 +9,29 @@ h2 {
 }
 
 div.maintenance-title {
-    margin-top: 1rem;
+    --top-margin: 1rem;
+    margin-top: var(--top-margin);
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     position: sticky;
-    top: 0;
+    top: calc(-1 * var(--top-margin) - 2px);
+    background: black;
 
     h2 {
         margin: 0;
+    }
+}
+
+.maintenance-item {
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid white;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+
+    &:not(:first-of-type) {
+        margin-top: 1rem;
     }
 }
