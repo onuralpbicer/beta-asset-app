@@ -1,18 +1,11 @@
-<ion-item [ngSwitch]="property.type" *ngIf="property">
-    <ion-label>
-        <h3>
-            {{ property.description }}
-            <span *ngIf="property.unit">({{ property.unit }})</span>
-        </h3>
+<ng-container [ngSwitch]="property.fieldType">
+    <beta-asset-app-equipment-property-base
+        *ngSwitchCase="IEquipmentPropertyMetaTypes.Normal"
+        [property]="baseProperty"
+    ></beta-asset-app-equipment-property-base>
 
-        <p *ngSwitchCase="IEquipmentPropertyType.TEXT">
-            {{ property.textValue }}
-        </p>
-        <p *ngSwitchCase="IEquipmentPropertyType.NUMBER">
-            {{ property.numberValue }}
-        </p>
-        <p *ngSwitchCase="IEquipmentPropertyType.DATE">
-            {{ property.dateValue | date }}
-        </p>
-    </ion-label>
-</ion-item>
+    <beta-asset-app-equipment-property-multi
+        *ngSwitchCase="IEquipmentPropertyMetaTypes.Multi"
+        [property]="multiProperty"
+    ></beta-asset-app-equipment-property-multi>
+</ng-container>

@@ -31,6 +31,7 @@
         "@capacitor/ios": "^5.0.4",
         "@capacitor/keyboard": "5.0.2",
         "@capacitor/status-bar": "5.0.2",
+        "@contentful/rich-text-html-renderer": "^16.1.0",
         "@ionic/angular": "^7.0.0",
         "@ionic/storage-angular": "^4.0.0",
         "@ngrx/component-store": "^16.0.1",

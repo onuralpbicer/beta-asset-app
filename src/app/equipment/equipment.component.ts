@@ -8,6 +8,7 @@ import { Observable, from, map, switchMap, take } from 'rxjs'
 import {
     IEquipmentBase,
     IEquipmentProperty,
+    IEquipmentPropertyMetaTypes,
     IEquipmentPropertyTypes,
     IMaintenanceSummary,
 } from '../model'
@@ -90,7 +91,6 @@ export class EquipmentComponent implements OnInit {
 
         const equipmentWithLinks =
             await this.contentfulService.getEntry<IEquipmentBase>(id)
-
         this.equipmentBase = equipmentWithLinks.fields
 
         this.equipmentProperties.push(
@@ -98,33 +98,42 @@ export class EquipmentComponent implements OnInit {
                 description: 'Cihaz adi',
                 type: IEquipmentPropertyTypes.TEXT,
                 textValue: this.equipmentBase.name,
+                fieldType: IEquipmentPropertyMetaTypes.Normal,
             },
             {
                 description: 'Cihaz Markasi',
                 type: IEquipmentPropertyTypes.TEXT,
                 textValue: this.equipmentBase.brand,
+                fieldType: IEquipmentPropertyMetaTypes.Normal,
             },
             {
                 description: 'Cihaz Mahali',
                 type: IEquipmentPropertyTypes.TEXT,
                 textValue: this.equipmentBase.location,
+                fieldType: IEquipmentPropertyMetaTypes.Normal,
             },
             {
                 description: 'Seri No',
                 type: IEquipmentPropertyTypes.TEXT,
                 textValue: this.equipmentBase.serialNumber,
+                fieldType: IEquipmentPropertyMetaTypes.Normal,
             },
         )
 
         await Promise.all(
             equipmentWithLinks.fields.extraProperties.map(async (property) => {
-                const entry =
-                    await this.contentfulService.getEntry<IEquipmentProperty>(
+                const equipmentProperty =
+                    await this.equipmentService.loadEquipmentProperty(
                         property.sys.id,
                     )
-                this.equipmentProperties.push(entry.fields)
+
+                if (equipmentProperty) {
+                    this.equipmentProperties.push(equipmentProperty)
+                }
             }),
         )
+
+        console.log(this.equipmentProperties)
 
         this.loading = false
     }

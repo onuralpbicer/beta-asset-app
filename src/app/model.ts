@@ -5,7 +5,7 @@ export interface ListPageListItem {
     name: string
 }
 
-type ILink = RichTextDataTarget
+export type ILink = RichTextDataTarget
 
 export interface IEquipmentBase {
     brand: string
@@ -22,7 +22,20 @@ export enum IEquipmentPropertyTypes {
     DATE = 'Date',
 }
 
-export interface IEquipmentProperty {
+export enum IEquipmentPropertyMetaTypes {
+    Normal = 'equipmentProperty',
+    Multi = 'multiEquipmentProperty',
+    Group = 'equipmentPropertyGroup',
+}
+
+export interface IMultiEquipmentProperty {
+    fieldType: IEquipmentPropertyMetaTypes.Multi
+    items: Array<Omit<IEquipmentPropertyBase, 'fieldType'>>
+    overrideUnit: string
+}
+
+export interface IEquipmentPropertyBase {
+    fieldType: IEquipmentPropertyMetaTypes.Normal
     description: string
     type: IEquipmentPropertyTypes
     unit?: string
@@ -30,6 +43,10 @@ export interface IEquipmentProperty {
     numberValue?: number
     dateValue?: Date
 }
+
+export type IEquipmentProperty =
+    | IEquipmentPropertyBase
+    | IMultiEquipmentProperty
 
 export interface IEquipmentType {
     name: string

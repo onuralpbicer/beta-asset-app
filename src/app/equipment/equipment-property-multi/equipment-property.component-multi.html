@@ -1,0 +1,32 @@
+<ion-item>
+    <ion-label>
+        <h3>
+            <ng-container *ngFor="let item of property.items; let i = index">
+                <span *ngIf="i !== 0"> / </span>
+                <span>{{item.description}}</span>
+                <span *ngIf="!property.overrideUnit && item.unit">
+                    (<span [innerHTML]="item.unit"></span>)
+                </span>
+            </ng-container>
+            <ng-container *ngIf="property.overrideUnit">
+                (<span [innerHTML]="property.overrideUnit"></span>)
+            </ng-container>
+        </h3>
+
+        <ng-container *ngFor="let item of property.items; let i = index">
+            <span *ngIf="i !== 0"> / </span>
+
+            <ng-container [ngSwitch]="item.type">
+                <p *ngSwitchCase="IEquipmentPropertyType.TEXT">
+                    {{ item.textValue }}
+                </p>
+                <p *ngSwitchCase="IEquipmentPropertyType.NUMBER">
+                    {{ item.numberValue }}
+                </p>
+                <p *ngSwitchCase="IEquipmentPropertyType.DATE">
+                    {{ item.dateValue | date }}
+                </p>
+            </ng-container>
+        </ng-container>
+    </ion-label>
+</ion-item>
