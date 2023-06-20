@@ -28,6 +28,13 @@ export enum IEquipmentPropertyMetaTypes {
     Group = 'equipmentPropertyGroup',
 }
 
+export interface IGroupEquipmentProperty {
+    fieldType: IEquipmentPropertyMetaTypes.Group
+    value1Name: string
+    value2Name: string
+    items: Array<IMultiEquipmentPropertyItem>
+}
+
 export interface IMultiEquipmentProperty {
     fieldType: IEquipmentPropertyMetaTypes.Multi
     items: Array<Omit<IEquipmentPropertyBase, 'fieldType'>>
@@ -44,9 +51,17 @@ export interface IEquipmentPropertyBase {
     dateValue?: Date
 }
 
+export interface IMultiEquipmentPropertyItem
+    extends Omit<IEquipmentPropertyBase, 'fieldType'> {
+    textValue2?: string
+    numberValue2?: number
+    dateValue2?: Date
+}
+
 export type IEquipmentProperty =
     | IEquipmentPropertyBase
     | IMultiEquipmentProperty
+    | IGroupEquipmentProperty
 
 export interface IEquipmentType {
     name: string

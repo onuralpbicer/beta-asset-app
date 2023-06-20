@@ -1,0 +1,9 @@
+<ng-container [ngSwitch]="property.type">
+    <p *ngSwitchCase="IEquipmentPropertyType.TEXT">{{ property.textValue }}</p>
+    <p *ngSwitchCase="IEquipmentPropertyType.NUMBER">
+        {{ property.numberValue }}
+    </p>
+    <p *ngSwitchCase="IEquipmentPropertyType.DATE">
+        {{ property.dateValue | date }}
+    </p>
+</ng-container>

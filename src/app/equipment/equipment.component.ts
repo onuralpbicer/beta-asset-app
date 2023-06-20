@@ -133,7 +133,9 @@ export class EquipmentComponent implements OnInit {
             }),
         )
 
-        console.log(this.equipmentProperties)
+        console.log(
+            this.equipmentProperties[this.equipmentProperties.length - 1],
+        )
 
         this.loading = false
     }

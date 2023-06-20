@@ -16,17 +16,8 @@
         <ng-container *ngFor="let item of property.items; let i = index">
             <span *ngIf="i !== 0"> / </span>
 
-            <ng-container [ngSwitch]="item.type">
-                <p *ngSwitchCase="IEquipmentPropertyType.TEXT">
-                    {{ item.textValue }}
-                </p>
-                <p *ngSwitchCase="IEquipmentPropertyType.NUMBER">
-                    {{ item.numberValue }}
-                </p>
-                <p *ngSwitchCase="IEquipmentPropertyType.DATE">
-                    {{ item.dateValue | date }}
-                </p>
-            </ng-container>
+            <beta-asset-app-equipment-property-value [property]="item">
+            </beta-asset-app-equipment-property-value>
         </ng-container>
     </ion-label>
 </ion-item>

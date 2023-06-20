@@ -5,10 +5,12 @@ import {
     IEquipmentProperty,
     IEquipmentPropertyBase,
     IEquipmentPropertyMetaTypes,
+    IGroupEquipmentProperty,
     IMultiEquipmentProperty,
 } from '../../model'
 import { EquipmentPropertyBaseComponent } from '../equipment-property-base/equipment-property.component-base'
 import { EquipmentPropertyMultiComponent } from '../equipment-property-multi/equipment-property.component-multi'
+import { EquipmentPropertyGroupComponent } from '../equipment-property-group/equipment-property.component-group'
 
 @Component({
     selector: 'beta-asset-app-equipment-property',
@@ -20,6 +22,7 @@ import { EquipmentPropertyMultiComponent } from '../equipment-property-multi/equ
         IonicModule,
         EquipmentPropertyBaseComponent,
         EquipmentPropertyMultiComponent,
+        EquipmentPropertyGroupComponent,
     ],
 })
 export class EquipmentPropertyComponent {
@@ -35,5 +38,9 @@ export class EquipmentPropertyComponent {
 
     get multiProperty(): IMultiEquipmentProperty {
         return this.property as IMultiEquipmentProperty
+    }
+
+    get groupProperty(): IGroupEquipmentProperty {
+        return this.property as IGroupEquipmentProperty
     }
 }

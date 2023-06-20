@@ -1,0 +1,26 @@
+<div class="container">
+    <div></div>
+    <div>{{property.value1Name}}</div>
+    <div>{{property.value2Name}}</div>
+
+    <ng-container *ngFor="let item of property.items">
+        <div>
+            {{item.description}}
+            <span *ngIf="item.unit">
+                (<span [innerHTML]="item.unit"></span>)
+            </span>
+        </div>
+        <div>
+            <beta-asset-app-equipment-property-value
+                [property]="getPropertyToRender(item, 'first')"
+            >
+            </beta-asset-app-equipment-property-value>
+        </div>
+        <div>
+            <beta-asset-app-equipment-property-value
+                [property]="getPropertyToRender(item, 'second')"
+            >
+            </beta-asset-app-equipment-property-value>
+        </div>
+    </ng-container>
+</div>

@@ -6,8 +6,10 @@ import {
     IEquipmentPropertyMetaTypes,
     IEquipmentPropertyTypes,
     IEquipmentType,
+    IGroupEquipmentProperty,
     ILink,
     IMultiEquipmentProperty,
+    IMultiEquipmentPropertyItem,
 } from '../model'
 import { from, map } from 'rxjs'
 import { ArrayTypeof } from '../types'
@@ -35,7 +37,6 @@ export class EquipmentService {
         id: string,
     ): Promise<IEquipmentProperty | null> {
         const entry = await this.contentfulService.getEntry<any>(id)
-        // console.log(entry)
         switch (entry.sys.contentType.sys.id) {
             case IEquipmentPropertyMetaTypes.Normal:
                 return {
@@ -46,6 +47,9 @@ export class EquipmentService {
 
             case IEquipmentPropertyMetaTypes.Multi:
                 return this.loadMultiEquipmentProperty(entry)
+
+            case IEquipmentPropertyMetaTypes.Group:
+                return this.loadGroupEquipmentProperty(entry)
 
             default:
                 return null
@@ -68,10 +72,34 @@ export class EquipmentService {
             }),
         )
 
-        console.log(entry.fields.overrideUnit)
         return {
             fieldType: IEquipmentPropertyMetaTypes.Multi,
             overrideUnit: renderUnit(entry.fields.overrideUnit),
+            items,
+        }
+    }
+
+    private async loadGroupEquipmentProperty(
+        entry: any,
+    ): Promise<IGroupEquipmentProperty> {
+        const items: IGroupEquipmentProperty['items'] = await Promise.all(
+            entry.fields.items.map(async (item: ILink) => {
+                const itemEntry =
+                    await this.contentfulService.getEntry<IMultiEquipmentPropertyItem>(
+                        item.sys.id,
+                    )
+
+                return {
+                    ...itemEntry.fields,
+                    unit: renderUnit(itemEntry.fields.unit),
+                }
+            }),
+        )
+
+        return {
+            fieldType: IEquipmentPropertyMetaTypes.Group,
+            value1Name: entry.fields.value1name,
+            value2Name: entry.fields.value2name,
             items,
         }
     }
