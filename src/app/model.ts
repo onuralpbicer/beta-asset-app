@@ -7,13 +7,12 @@ export interface ListPageListItem {
 
 export type ILink = RichTextDataTarget
 
+export type IValue = string | boolean | Date | number
+
 export interface IEquipmentBase {
-    brand: string
     name: string
-    location: string
-    serialNumber: string
     type: ILink
-    extraProperties: Array<ILink>
+    properties: Record<string, IValue | Array<IValue>>
 }
 
 export enum IEquipmentPropertyTypes {
@@ -30,32 +29,28 @@ export enum IEquipmentPropertyMetaTypes {
 
 export interface IGroupEquipmentProperty {
     fieldType: IEquipmentPropertyMetaTypes.Group
+    fieldId: string
     value1Name: string
     value2Name: string
-    items: Array<IMultiEquipmentPropertyItem>
+    items: Array<IEquipmentPropertyBase>
 }
 
 export interface IMultiEquipmentProperty {
     fieldType: IEquipmentPropertyMetaTypes.Multi
+    fieldId: string
     items: Array<Omit<IEquipmentPropertyBase, 'fieldType'>>
     overrideUnit: string
 }
 
 export interface IEquipmentPropertyBase {
     fieldType: IEquipmentPropertyMetaTypes.Normal
+    fieldId: string
     description: string
     type: IEquipmentPropertyTypes
     unit?: string
     textValue?: string
     numberValue?: number
     dateValue?: Date
-}
-
-export interface IMultiEquipmentPropertyItem
-    extends Omit<IEquipmentPropertyBase, 'fieldType'> {
-    textValue2?: string
-    numberValue2?: number
-    dateValue2?: Date
 }
 
 export type IEquipmentProperty =

@@ -5,8 +5,6 @@ import {
     IEquipmentPropertyBase,
     IEquipmentPropertyTypes,
     IGroupEquipmentProperty,
-    IMultiEquipmentProperty,
-    IMultiEquipmentPropertyItem,
 } from '../../model'
 import { EquipmentPropertyValueComponent } from '../equipment-property-value/equipment-property.component-value'
 import { equals, pick, prop } from 'rambda'
@@ -26,7 +24,7 @@ export class EquipmentPropertyGroupComponent {
     constructor() {}
 
     public getPropertyToRender(
-        item: IMultiEquipmentPropertyItem,
+        item: IEquipmentPropertyBase,
         type: 'first' | 'second',
     ): Omit<IEquipmentPropertyBase, 'fieldType' | 'description' | 'unit'> {
         const property: Omit<
@@ -36,11 +34,11 @@ export class EquipmentPropertyGroupComponent {
             ...item,
         }
 
-        if (equals(type, 'second')) {
-            property.textValue = item.textValue2
-            property.numberValue = item.numberValue2
-            property.dateValue = item.dateValue2
-        }
+        // if (equals(type, 'second')) {
+        //     property.textValue = item.textValue2
+        //     property.numberValue = item.numberValue2
+        //     property.dateValue = item.dateValue2
+        // }
 
         return property
     }

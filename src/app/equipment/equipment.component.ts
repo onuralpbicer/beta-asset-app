@@ -10,6 +10,7 @@ import {
     IEquipmentProperty,
     IEquipmentPropertyMetaTypes,
     IEquipmentPropertyTypes,
+    ILink,
     IMaintenanceSummary,
 } from '../model'
 import { LoadingIconComponent } from '../loading-icon/loading-icon.component'
@@ -24,6 +25,7 @@ import {
     where,
 } from '@angular/fire/firestore'
 import { FIRESTORE_COLLECTION_NAME } from '../util'
+import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 
 @Component({
     selector: 'beta-asset-app-equipment',
@@ -93,48 +95,34 @@ export class EquipmentComponent implements OnInit {
             await this.contentfulService.getEntry<IEquipmentBase>(id)
         this.equipmentBase = equipmentWithLinks.fields
 
-        this.equipmentProperties.push(
-            {
-                description: 'Cihaz adi',
-                type: IEquipmentPropertyTypes.TEXT,
-                textValue: this.equipmentBase.name,
-                fieldType: IEquipmentPropertyMetaTypes.Normal,
-            },
-            {
-                description: 'Cihaz Markasi',
-                type: IEquipmentPropertyTypes.TEXT,
-                textValue: this.equipmentBase.brand,
-                fieldType: IEquipmentPropertyMetaTypes.Normal,
-            },
-            {
-                description: 'Cihaz Mahali',
-                type: IEquipmentPropertyTypes.TEXT,
-                textValue: this.equipmentBase.location,
-                fieldType: IEquipmentPropertyMetaTypes.Normal,
-            },
-            {
-                description: 'Seri No',
-                type: IEquipmentPropertyTypes.TEXT,
-                textValue: this.equipmentBase.serialNumber,
-                fieldType: IEquipmentPropertyMetaTypes.Normal,
-            },
+        const equipmentType = await this.contentfulService.getEntry<any>(
+            this.equipmentBase.type.sys.id,
         )
 
+        console.log(this.equipmentBase)
+
+        this.equipmentProperties.push({
+            description: 'Cihaz adi',
+            type: IEquipmentPropertyTypes.TEXT,
+            fieldId: '',
+            textValue: this.equipmentBase.name,
+            fieldType: IEquipmentPropertyMetaTypes.Normal,
+        })
+
+        const properties = equipmentType.fields.properties
+
         await Promise.all(
-            equipmentWithLinks.fields.extraProperties.map(async (property) => {
+            properties.map(async (property: ILink) => {
                 const equipmentProperty =
                     await this.equipmentService.loadEquipmentProperty(
                         property.sys.id,
+                        this.equipmentBase?.properties ?? {},
                     )
 
                 if (equipmentProperty) {
                     this.equipmentProperties.push(equipmentProperty)
                 }
             }),
-        )
-
-        console.log(
-            this.equipmentProperties[this.equipmentProperties.length - 1],
         )
 
         this.loading = false

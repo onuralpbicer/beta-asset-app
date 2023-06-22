@@ -3,13 +3,14 @@ import { ContentfulService } from '../services/contentful.service'
 import {
     IEquipmentBase,
     IEquipmentProperty,
+    IEquipmentPropertyBase,
     IEquipmentPropertyMetaTypes,
     IEquipmentPropertyTypes,
     IEquipmentType,
     IGroupEquipmentProperty,
     ILink,
     IMultiEquipmentProperty,
-    IMultiEquipmentPropertyItem,
+    IValue,
 } from '../model'
 import { from, map } from 'rxjs'
 import { ArrayTypeof } from '../types'
@@ -33,24 +34,57 @@ export class EquipmentService {
         ).pipe(map((equipmentType) => equipmentType.fields))
     }
 
+    /**
+     * Caution!! Mutates input
+     * @param property
+     * @param value
+     */
+    private replaceValue(
+        property: Omit<IEquipmentPropertyBase, 'fieldType'>,
+        value: IValue,
+    ) {
+        if (!value) return
+
+        if (property.type === IEquipmentPropertyTypes.TEXT) {
+            property.textValue = String(value)
+        } else if (property.type === IEquipmentPropertyTypes.NUMBER) {
+            const num = Number(value)
+            if (!isNaN(num)) property.numberValue = num
+        } else if (property.type === IEquipmentPropertyTypes.DATE) {
+            property.dateValue = value as Date
+        }
+    }
+
     public async loadEquipmentProperty(
         id: string,
+        values: IEquipmentBase['properties'],
     ): Promise<IEquipmentProperty | null> {
         const entry = await this.contentfulService.getEntry<any>(id)
+
         switch (entry.sys.contentType.sys.id) {
-            case IEquipmentPropertyMetaTypes.Normal:
+            case IEquipmentPropertyMetaTypes.Normal: {
+                const baseEntry = entry.fields as Omit<
+                    IEquipmentPropertyBase,
+                    'fieldType'
+                >
+
+                this.replaceValue(
+                    baseEntry,
+                    values[baseEntry.fieldId] as IValue,
+                )
+
                 return {
-                    ...entry.fields,
+                    ...baseEntry,
                     unit: renderUnit(entry.fields.unit),
                     fieldType: IEquipmentPropertyMetaTypes.Normal,
                 }
+            }
 
             case IEquipmentPropertyMetaTypes.Multi:
-                return this.loadMultiEquipmentProperty(entry)
+                return this.loadMultiEquipmentProperty(entry, values)
 
             case IEquipmentPropertyMetaTypes.Group:
-                return this.loadGroupEquipmentProperty(entry)
-
+                return this.loadGroupEquipmentProperty(entry, values)
             default:
                 return null
         }
@@ -58,12 +92,17 @@ export class EquipmentService {
 
     private async loadMultiEquipmentProperty(
         entry: any,
+        values: IEquipmentBase['properties'],
     ): Promise<IMultiEquipmentProperty> {
+        const valueList = (values[entry.fields.fieldId] as IValue[]) || []
+
         const items: IMultiEquipmentProperty['items'] = await Promise.all(
-            entry.fields.items.map(async (item: ILink) => {
+            entry.fields.items.map(async (item: ILink, index: number) => {
                 const itemEntry = await this.contentfulService.getEntry<
                     ArrayTypeof<IMultiEquipmentProperty['items']>
                 >(item.sys.id)
+
+                this.replaceValue(itemEntry.fields as any, valueList[index])
 
                 return {
                     ...itemEntry.fields,
@@ -75,19 +114,25 @@ export class EquipmentService {
         return {
             fieldType: IEquipmentPropertyMetaTypes.Multi,
             overrideUnit: renderUnit(entry.fields.overrideUnit),
+            fieldId: '',
             items,
         }
     }
 
     private async loadGroupEquipmentProperty(
         entry: any,
+        values: IEquipmentBase['properties'],
     ): Promise<IGroupEquipmentProperty> {
+        const valueList = (values[entry.fields.fieldId] as IValue[]) || []
+
         const items: IGroupEquipmentProperty['items'] = await Promise.all(
-            entry.fields.items.map(async (item: ILink) => {
+            entry.fields.items.map(async (item: ILink, index: number) => {
                 const itemEntry =
-                    await this.contentfulService.getEntry<IMultiEquipmentPropertyItem>(
+                    await this.contentfulService.getEntry<IEquipmentPropertyBase>(
                         item.sys.id,
                     )
+
+                this.replaceValue(itemEntry.fields as any, valueList[index])
 
                 return {
                     ...itemEntry.fields,
@@ -98,6 +143,7 @@ export class EquipmentService {
 
         return {
             fieldType: IEquipmentPropertyMetaTypes.Group,
+            fieldId: '',
             value1Name: entry.fields.value1name,
             value2Name: entry.fields.value2name,
             items,
