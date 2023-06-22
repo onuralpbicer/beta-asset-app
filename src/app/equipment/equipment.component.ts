@@ -99,13 +99,13 @@ export class EquipmentComponent implements OnInit {
             this.equipmentBase.type.sys.id,
         )
 
-        console.log(this.equipmentBase)
+        const nameKey = 'name'
+        this.equipmentBase.properties[nameKey] = this.equipmentBase.name
 
         this.equipmentProperties.push({
             description: 'Cihaz adi',
             type: IEquipmentPropertyTypes.TEXT,
-            fieldId: '',
-            textValue: this.equipmentBase.name,
+            fieldId: 'name',
             fieldType: IEquipmentPropertyMetaTypes.Normal,
         })
 
@@ -116,7 +116,6 @@ export class EquipmentComponent implements OnInit {
                 const equipmentProperty =
                     await this.equipmentService.loadEquipmentProperty(
                         property.sys.id,
-                        this.equipmentBase?.properties ?? {},
                     )
 
                 if (equipmentProperty) {

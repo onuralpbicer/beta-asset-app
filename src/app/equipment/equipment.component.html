@@ -24,6 +24,7 @@
         <beta-asset-app-equipment-property
             [property]="equipmentProperty"
             *ngFor="let equipmentProperty of equipmentProperties"
+            [values]="equipmentBase.properties"
         ></beta-asset-app-equipment-property>
         <div class="maintenance-title">
             <h2>Maintenances</h2>

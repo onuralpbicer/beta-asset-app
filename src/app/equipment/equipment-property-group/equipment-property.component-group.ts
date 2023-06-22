@@ -5,9 +5,13 @@ import {
     IEquipmentPropertyBase,
     IEquipmentPropertyTypes,
     IGroupEquipmentProperty,
+    IValue,
+    IValueMap,
 } from '../../model'
 import { EquipmentPropertyValueComponent } from '../equipment-property-value/equipment-property.component-value'
 import { equals, pick, prop } from 'rambda'
+import { EquipmentService } from '../equipment.service'
+import { ArrayTypeof } from 'src/app/types'
 
 @Component({
     selector: 'beta-asset-app-equipment-property-group',
@@ -18,28 +22,19 @@ import { equals, pick, prop } from 'rambda'
 })
 export class EquipmentPropertyGroupComponent {
     @Input() property!: IGroupEquipmentProperty
+    @Input() value!: Record<string, IValue[]>
 
     public IEquipmentPropertyType = IEquipmentPropertyTypes
 
-    constructor() {}
+    constructor(private equipmentService: EquipmentService) {}
 
-    public getPropertyToRender(
-        item: IEquipmentPropertyBase,
-        type: 'first' | 'second',
-    ): Omit<IEquipmentPropertyBase, 'fieldType' | 'description' | 'unit'> {
-        const property: Omit<
-            IEquipmentPropertyBase,
-            'fieldType' | 'description' | 'unit'
-        > = {
-            ...item,
-        }
-
-        // if (equals(type, 'second')) {
-        //     property.textValue = item.textValue2
-        //     property.numberValue = item.numberValue2
-        //     property.dateValue = item.dateValue2
-        // }
-
-        return property
+    public getValueMap(
+        item: ArrayTypeof<IGroupEquipmentProperty['items']>,
+        index: number,
+    ): IValueMap {
+        return this.equipmentService.getValueMap(
+            item,
+            this.value?.[item.fieldId]?.[index],
+        )
     }
 }

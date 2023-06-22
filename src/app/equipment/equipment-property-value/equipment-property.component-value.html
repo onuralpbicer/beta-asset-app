@@ -1,15 +1,15 @@
 <ng-container [ngSwitch]="property.type">
-    <p *ngSwitchCase="IEquipmentPropertyType.TEXT">{{ property.textValue }}</p>
+    <p *ngSwitchCase="IEquipmentPropertyType.TEXT">{{ values.textValue }}</p>
     <p *ngSwitchCase="IEquipmentPropertyType.NUMBER">
-        {{ property.numberValue }}
+        {{ values.numberValue }}
     </p>
     <p *ngSwitchCase="IEquipmentPropertyType.DATE">
-        {{ property.dateValue | date }}
+        {{ values.dateValue | date }}
     </p>
     <div class="toggle-container" *ngSwitchCase="IEquipmentPropertyType.TOGGLE">
         <div
             *ngFor="let option of property.toggleOptions; let i = index"
-            [attr.data-selected]="property.toggleValue === i"
+            [attr.data-selected]="values.toggleValue === i"
         >
             {{option}}
         </div>

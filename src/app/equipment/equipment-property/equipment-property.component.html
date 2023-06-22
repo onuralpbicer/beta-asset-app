@@ -2,15 +2,18 @@
     <beta-asset-app-equipment-property-base
         *ngSwitchCase="IEquipmentPropertyMetaTypes.Normal"
         [property]="baseProperty"
+        [value]="baseValue"
     ></beta-asset-app-equipment-property-base>
 
     <beta-asset-app-equipment-property-multi
         *ngSwitchCase="IEquipmentPropertyMetaTypes.Multi"
         [property]="multiProperty"
+        [value]="multiValue"
     ></beta-asset-app-equipment-property-multi>
 
     <beta-asset-app-equipment-property-group
         *ngSwitchCase="IEquipmentPropertyMetaTypes.Group"
         [property]="groupProperty"
+        [value]="groupValue"
     ></beta-asset-app-equipment-property-group>
 </ng-container>

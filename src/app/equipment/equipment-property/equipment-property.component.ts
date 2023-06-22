@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common'
 import { Component, Input } from '@angular/core'
 import { IonicModule } from '@ionic/angular'
 import {
+    IEquipmentBase,
     IEquipmentProperty,
     IEquipmentPropertyBase,
     IEquipmentPropertyMetaTypes,
     IGroupEquipmentProperty,
     IMultiEquipmentProperty,
+    IValue,
 } from '../../model'
 import { EquipmentPropertyBaseComponent } from '../equipment-property-base/equipment-property.component-base'
 import { EquipmentPropertyMultiComponent } from '../equipment-property-multi/equipment-property.component-multi'
@@ -27,6 +29,7 @@ import { EquipmentPropertyGroupComponent } from '../equipment-property-group/equ
 })
 export class EquipmentPropertyComponent {
     @Input() property!: IEquipmentProperty
+    @Input() values!: IEquipmentBase['properties']
 
     public IEquipmentPropertyMetaTypes = IEquipmentPropertyMetaTypes
 
@@ -36,11 +39,23 @@ export class EquipmentPropertyComponent {
         return this.property as IEquipmentPropertyBase
     }
 
+    get baseValue() {
+        return this.values[this.property.fieldId] as IValue
+    }
+
     get multiProperty(): IMultiEquipmentProperty {
         return this.property as IMultiEquipmentProperty
     }
 
+    get multiValue() {
+        return this.values[this.property.fieldId] as IValue[]
+    }
+
     get groupProperty(): IGroupEquipmentProperty {
         return this.property as IGroupEquipmentProperty
+    }
+
+    get groupValue() {
+        return this.values[this.property.fieldId] as Record<string, IValue[]>
     }
 }

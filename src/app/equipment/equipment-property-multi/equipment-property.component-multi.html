@@ -16,7 +16,10 @@
         <ng-container *ngFor="let item of property.items; let i = index">
             <span *ngIf="i !== 0"> / </span>
 
-            <beta-asset-app-equipment-property-value [property]="item">
+            <beta-asset-app-equipment-property-value
+                [property]="item"
+                [values]="getValueMap(item, i)"
+            >
             </beta-asset-app-equipment-property-value>
         </ng-container>
     </ion-label>

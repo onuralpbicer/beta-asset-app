@@ -11,6 +11,7 @@ import {
     ILink,
     IMultiEquipmentProperty,
     IValue,
+    IValueMap,
 } from '../model'
 import { from, map } from 'rxjs'
 import { ArrayTypeof } from '../types'
@@ -35,32 +36,29 @@ export class EquipmentService {
         ).pipe(map((equipmentType) => equipmentType.fields))
     }
 
-    /**
-     * Caution!! Mutates input
-     * @param property
-     * @param value
-     */
-    private replaceValue(
+    public getValueMap(
         property: Omit<IEquipmentPropertyBase, 'fieldType'>,
         value: IValue,
     ) {
-        if (isNil(value)) return
+        const valueMap = {} as IValueMap
+        if (isNil(value)) return valueMap
 
         if (property.type === IEquipmentPropertyTypes.TEXT) {
-            property.textValue = String(value)
+            valueMap.textValue = String(value)
         } else if (property.type === IEquipmentPropertyTypes.NUMBER) {
             const num = Number(value)
-            if (!isNaN(num)) property.numberValue = num
+            if (!isNaN(num)) valueMap.numberValue = num
         } else if (property.type === IEquipmentPropertyTypes.DATE) {
-            property.dateValue = value as Date
+            valueMap.dateValue = value as Date
         } else if (property.type === IEquipmentPropertyTypes.TOGGLE) {
-            property.toggleValue = value as number
+            valueMap.toggleValue = value as number
         }
+
+        return valueMap
     }
 
     public async loadEquipmentProperty(
         id: string,
-        values: IEquipmentBase['properties'],
     ): Promise<IEquipmentProperty | null> {
         const entry = await this.contentfulService.getEntry<any>(id)
 
@@ -71,10 +69,10 @@ export class EquipmentService {
                     'fieldType'
                 >
 
-                this.replaceValue(
-                    baseEntry,
-                    values[baseEntry.fieldId] as IValue,
-                )
+                // this.replaceValue(
+                //     baseEntry,
+                //     values[baseEntry.fieldId] as IValue,
+                // )
 
                 return {
                     ...baseEntry,
@@ -84,10 +82,10 @@ export class EquipmentService {
             }
 
             case IEquipmentPropertyMetaTypes.Multi:
-                return this.loadMultiEquipmentProperty(entry, values)
+                return this.loadMultiEquipmentProperty(entry)
 
             case IEquipmentPropertyMetaTypes.Group:
-                return this.loadGroupEquipmentProperty(entry, values)
+                return this.loadGroupEquipmentProperty(entry)
             default:
                 return null
         }
@@ -95,17 +93,14 @@ export class EquipmentService {
 
     private async loadMultiEquipmentProperty(
         entry: any,
-        values: IEquipmentBase['properties'],
     ): Promise<IMultiEquipmentProperty> {
-        const valueList = (values[entry.fields.fieldId] as IValue[]) || []
-
         const items: IMultiEquipmentProperty['items'] = await Promise.all(
             entry.fields.items.map(async (item: ILink, index: number) => {
                 const itemEntry = await this.contentfulService.getEntry<
                     ArrayTypeof<IMultiEquipmentProperty['items']>
                 >(item.sys.id)
 
-                this.replaceValue(itemEntry.fields as any, valueList[index])
+                // this.replaceValue(itemEntry.fields as any, valueList[index])
 
                 return {
                     ...itemEntry.fields,
@@ -117,18 +112,14 @@ export class EquipmentService {
         return {
             fieldType: IEquipmentPropertyMetaTypes.Multi,
             overrideUnit: renderUnit(entry.fields.overrideUnit),
-            fieldId: '',
+            fieldId: entry.fields.fieldId,
             items,
         }
     }
 
     private async loadGroupEquipmentProperty(
         entry: any,
-        values: IEquipmentBase['properties'],
     ): Promise<IGroupEquipmentProperty> {
-        const valueMap =
-            (values[entry.fields.fieldId] as Record<string, IValue[]>) || {}
-
         const items: IGroupEquipmentProperty['items'] = await Promise.all(
             entry.fields.items.map(async (item: ILink, index: number) => {
                 const itemEntry =
@@ -136,10 +127,10 @@ export class EquipmentService {
                         item.sys.id,
                     )
 
-                this.replaceValue(
-                    itemEntry.fields,
-                    valueMap[itemEntry.fields.fieldId]?.[index],
-                )
+                // this.replaceValue(
+                //     itemEntry.fields,
+                //     valueMap[itemEntry.fields.fieldId]?.[index],
+                // )
 
                 return {
                     ...itemEntry.fields,
@@ -150,7 +141,7 @@ export class EquipmentService {
 
         return {
             fieldType: IEquipmentPropertyMetaTypes.Group,
-            fieldId: '',
+            fieldId: entry.fields.fieldId,
             value1Name: entry.fields.value1name,
             value2Name: entry.fields.value2name,
             items,

@@ -46,6 +46,13 @@ export interface IMultiEquipmentProperty {
     overrideUnit: string
 }
 
+export interface IValueMap {
+    textValue?: string
+    numberValue?: number
+    dateValue?: Date
+    toggleValue?: number
+}
+
 export interface IEquipmentPropertyBase {
     fieldType: IEquipmentPropertyMetaTypes.Normal
     fieldId: string
@@ -53,10 +60,8 @@ export interface IEquipmentPropertyBase {
     type: IEquipmentPropertyTypes
     unit?: string
     toggleOptions?: string[]
-    textValue?: string
-    numberValue?: number
-    dateValue?: Date
-    toggleValue?: number
+    // values: Partial<IValueMap>
+    // values2: Partial<IValueMap>
 }
 
 export type IEquipmentProperty =

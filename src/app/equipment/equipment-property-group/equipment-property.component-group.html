@@ -12,13 +12,15 @@
         </div>
         <div>
             <beta-asset-app-equipment-property-value
-                [property]="getPropertyToRender(item, 'first')"
+                [property]="item"
+                [values]="getValueMap(item, 0)"
             >
             </beta-asset-app-equipment-property-value>
         </div>
         <div>
             <beta-asset-app-equipment-property-value
-                [property]="getPropertyToRender(item, 'second')"
+                [property]="item"
+                [values]="getValueMap(item, 1)"
             >
             </beta-asset-app-equipment-property-value>
         </div>

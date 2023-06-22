@@ -5,7 +5,10 @@
             <span *ngIf="property.unit">({{ property.unit }})</span>
         </h3>
 
-        <beta-asset-app-equipment-property-value [property]="property">
+        <beta-asset-app-equipment-property-value
+            [property]="property"
+            [values]="valueMap"
+        >
         </beta-asset-app-equipment-property-value>
     </ion-label>
 </ion-item>
