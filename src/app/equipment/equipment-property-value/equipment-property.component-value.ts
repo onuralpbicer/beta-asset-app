@@ -23,4 +23,9 @@ export class EquipmentPropertyValueComponent {
     public IEquipmentPropertyType = IEquipmentPropertyTypes
 
     constructor() {}
+
+    test(event: any) {
+        console.log(event)
+        event.preventDefault()
+    }
 }

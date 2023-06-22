@@ -6,4 +6,12 @@
     <p *ngSwitchCase="IEquipmentPropertyType.DATE">
         {{ property.dateValue | date }}
     </p>
+    <div class="toggle-container" *ngSwitchCase="IEquipmentPropertyType.TOGGLE">
+        <div
+            *ngFor="let option of property.toggleOptions; let i = index"
+            [attr.data-selected]="property.toggleValue === i"
+        >
+            {{option}}
+        </div>
+    </div>
 </ng-container>

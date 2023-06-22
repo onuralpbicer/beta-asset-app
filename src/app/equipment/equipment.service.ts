@@ -15,6 +15,7 @@ import {
 import { from, map } from 'rxjs'
 import { ArrayTypeof } from '../types'
 import { renderUnit } from '../util'
+import { isNil, prop } from 'rambda'
 
 @Injectable({
     providedIn: 'root',
@@ -43,7 +44,7 @@ export class EquipmentService {
         property: Omit<IEquipmentPropertyBase, 'fieldType'>,
         value: IValue,
     ) {
-        if (!value) return
+        if (isNil(value)) return
 
         if (property.type === IEquipmentPropertyTypes.TEXT) {
             property.textValue = String(value)
@@ -52,6 +53,8 @@ export class EquipmentService {
             if (!isNaN(num)) property.numberValue = num
         } else if (property.type === IEquipmentPropertyTypes.DATE) {
             property.dateValue = value as Date
+        } else if (property.type === IEquipmentPropertyTypes.TOGGLE) {
+            property.toggleValue = value as number
         }
     }
 

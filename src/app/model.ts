@@ -22,6 +22,7 @@ export enum IEquipmentPropertyTypes {
     TEXT = 'Text',
     NUMBER = 'Number',
     DATE = 'Date',
+    TOGGLE = 'Toggle',
 }
 
 export enum IEquipmentPropertyMetaTypes {
@@ -51,9 +52,11 @@ export interface IEquipmentPropertyBase {
     description: string
     type: IEquipmentPropertyTypes
     unit?: string
+    toggleOptions?: string[]
     textValue?: string
     numberValue?: number
     dateValue?: Date
+    toggleValue?: number
 }
 
 export type IEquipmentProperty =
