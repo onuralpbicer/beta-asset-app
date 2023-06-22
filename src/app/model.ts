@@ -12,7 +12,10 @@ export type IValue = string | boolean | Date | number
 export interface IEquipmentBase {
     name: string
     type: ILink
-    properties: Record<string, IValue | Array<IValue>>
+    properties: Record<
+        string,
+        IValue | Array<IValue> | Record<string, IValue[]>
+    >
 }
 
 export enum IEquipmentPropertyTypes {

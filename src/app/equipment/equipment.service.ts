@@ -123,7 +123,8 @@ export class EquipmentService {
         entry: any,
         values: IEquipmentBase['properties'],
     ): Promise<IGroupEquipmentProperty> {
-        const valueList = (values[entry.fields.fieldId] as IValue[]) || []
+        const valueMap =
+            (values[entry.fields.fieldId] as Record<string, IValue[]>) || {}
 
         const items: IGroupEquipmentProperty['items'] = await Promise.all(
             entry.fields.items.map(async (item: ILink, index: number) => {
@@ -132,7 +133,10 @@ export class EquipmentService {
                         item.sys.id,
                     )
 
-                this.replaceValue(itemEntry.fields as any, valueList[index])
+                this.replaceValue(
+                    itemEntry.fields,
+                    valueMap[itemEntry.fields.fieldId]?.[index],
+                )
 
                 return {
                     ...itemEntry.fields,
