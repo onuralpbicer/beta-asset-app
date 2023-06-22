@@ -1,11 +1,9 @@
 import { CommonModule } from '@angular/common'
-import { Component, Input, OnInit } from '@angular/core'
+import { Component, Input } from '@angular/core'
 import { IonicModule } from '@ionic/angular'
 import {
     IEquipmentPropertyBase,
     IEquipmentPropertyTypes,
-    IMultiEquipmentProperty,
-    IValue,
     IValueMap,
 } from '../../model'
 
@@ -16,7 +14,7 @@ import {
     standalone: true,
     imports: [CommonModule, IonicModule],
 })
-export class EquipmentPropertyValueComponent implements OnInit {
+export class EquipmentPropertyValueComponent {
     @Input() property!: Omit<
         IEquipmentPropertyBase,
         'fieldType' | 'description' | 'unit'
@@ -26,8 +24,4 @@ export class EquipmentPropertyValueComponent implements OnInit {
     public IEquipmentPropertyType = IEquipmentPropertyTypes
 
     constructor() {}
-
-    ngOnInit(): void {
-        console.log(this.property, this.values)
-    }
 }
