@@ -20,14 +20,14 @@
         <ion-spinner></ion-spinner>
     </div>
     <ng-container *ngIf="!loading && equipmentBase">
-        <h2>Properties</h2>
+        <h2>Özellikler</h2>
         <beta-asset-app-equipment-property
             [property]="equipmentProperty"
             *ngFor="let equipmentProperty of equipmentProperties"
             [values]="equipmentBase.properties"
         ></beta-asset-app-equipment-property>
         <div class="maintenance-title">
-            <h2>Maintenances</h2>
+            <h2>Bakım</h2>
             <ion-button (click)="navigateToMaintenance()"
                 ><ion-icon name="add" slot="icon-only"></ion-icon
             ></ion-button>
