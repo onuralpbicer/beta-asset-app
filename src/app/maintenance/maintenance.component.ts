@@ -90,6 +90,8 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
 
                     this.formSubscriptions.push(
                         fg.controls['uygun'].valueChanges.subscribe((value) => {
+                            fg.markAsTouched()
+
                             const control = fg.controls['yapilanIs']
 
                             if (value === true || value === 'true') {
@@ -109,7 +111,6 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
         if (this.form.invalid || this.submitted) {
             return
         }
-
         this.activatedRoute.params
             .pipe(
                 take(1),

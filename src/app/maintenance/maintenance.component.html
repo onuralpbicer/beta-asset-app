@@ -14,21 +14,34 @@
     </ion-toolbar>
 </ion-header>
 <ion-content [forceOverscroll]="false" class="ion-padding" [formGroup]="form">
-    <h2>Bakim Bilgileri</h2>
-    <ion-item>
-        <ion-select
-            label="Bakim Tipi"
-            labelPlacement="stacked"
-            placeholder="Bakim tipini secin"
-            formControlName="type"
-        >
-            <ion-select-option value="Periyodik">Periyodik</ion-select-option>
-            <ion-select-option value="Ariza">Ariza</ion-select-option>
-        </ion-select>
-    </ion-item>
-    <h2>Yapilacak Isler</h2>
+    <h2>Bakım Bilgileri</h2>
+    <div
+        class="task"
+        [class.touched]="form.controls['type'].touched"
+        [class.valid]="form.controls['type'].valid"
+    >
+        <ion-item>
+            <ion-select
+                label="Bakim Tipi"
+                labelPlacement="stacked"
+                placeholder="Bakim tipini secin"
+                formControlName="type"
+            >
+                <ion-select-option value="Periyodik"
+                    >Periyodik</ion-select-option
+                >
+                <ion-select-option value="Ariza">Arıza</ion-select-option>
+            </ion-select>
+        </ion-item>
+    </div>
+    <h2>Yapılacak İşler</h2>
     <ng-container *ngFor="let task of maintenanceTasks.controls; let i = index">
-        <div class="task" [formGroup]="task">
+        <div
+            class="task"
+            [class.touched]="task.touched"
+            [class.valid]="task.valid"
+            [formGroup]="task"
+        >
             <h4>{{ task.get('name')?.value }}</h4>
 
             <ion-segment formControlName="uygun">
@@ -36,7 +49,7 @@
                     <ion-label>Uygun</ion-label>
                 </ion-segment-button>
                 <ion-segment-button [value]="false">
-                    <ion-label>Uygun Degil</ion-label>
+                    <ion-label>Uygun Değil</ion-label>
                 </ion-segment-button>
             </ion-segment>
 
@@ -52,13 +65,17 @@
                 </ion-segment-button>
             </ion-segment>
 
-            <ion-input
-                formControlName="description"
-                label="Aciklama"
-                labelPlacement="stacked"
-            ></ion-input>
+            <ion-item>
+                <ion-input
+                    formControlName="description"
+                    label="Açıklama"
+                    labelPlacement="stacked"
+                ></ion-input>
+            </ion-item>
         </div>
     </ng-container>
 
-    <ion-button (click)="submit()">Gönder</ion-button>
+    <ion-button (click)="submit()" expand="block" [disabled]="form.invalid"
+        >Gönder</ion-button
+    >
 </ion-content>
