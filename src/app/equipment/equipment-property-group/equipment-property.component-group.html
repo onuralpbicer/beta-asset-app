@@ -1,23 +1,25 @@
 <div class="container">
-    <div></div>
-    <div>{{property.value1Name}}</div>
-    <div>{{property.value2Name}}</div>
+    <div class="center"></div>
+    <div class="center">{{property.value1Name}}</div>
+    <div class="divider"></div>
+    <div class="center">{{property.value2Name}}</div>
 
     <ng-container *ngFor="let item of property.items">
-        <div>
+        <div class="key">
             {{item.description}}
             <span *ngIf="item.unit">
                 (<span [innerHTML]="item.unit"></span>)
             </span>
         </div>
-        <div>
+        <div class="center">
             <beta-asset-app-equipment-property-value
                 [property]="item"
                 [values]="getValueMap(item, 0)"
             >
             </beta-asset-app-equipment-property-value>
         </div>
-        <div>
+        <div class="divider"></div>
+        <div class="center">
             <beta-asset-app-equipment-property-value
                 [property]="item"
                 [values]="getValueMap(item, 1)"

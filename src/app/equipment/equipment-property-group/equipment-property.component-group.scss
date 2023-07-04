@@ -1,16 +1,24 @@
-ion-item {
-    margin-bottom: 0.5rem;
-
-    ion-label {
-        p {
-            color: rgb(175, 175, 175);
-        }
-    }
-}
-
 .container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    margin-top: 1rem;
+    padding-left: 1rem;
 
-    place-items: center;
+    display: grid;
+
+    --divider-size: 2px;
+    grid-template-columns: 1fr 1fr var(--divider-size) 1fr;
+
+    .center {
+        place-self: center;
+        text-align: center;
+        margin: 0.5rem 0.125rem;
+    }
+
+    .key {
+        margin: 0.5rem 0;
+        align-self: center;
+    }
+
+    .divider {
+        background-color: var(--ion-color-light-tint);
+    }
 }
