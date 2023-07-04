@@ -11,7 +11,8 @@
         "test": "ng test",
         "lint": "ng lint",
         "ios": "npm run build && cap sync ios && cap open ios",
-        "android": "npm run build && cap sync android && cap open android"
+        "android": "npm run build && cap sync android && cap open android",
+        "appflow:build": "if [ \"$CI_PLATFORM\" != \"web\" ]; then npx trapeze run appflow.yml -y --$CI_PLATFORM; fi && npm run build"
     },
     "private": true,
     "dependencies": {
@@ -39,6 +40,7 @@
         "@ngrx/entity": "^16.0.1",
         "@ngrx/router-store": "^16.0.1",
         "@ngrx/store": "^16.0.1",
+        "@trapezedev/configure": "^7.0.10",
         "contentful": "^9.3.5",
         "ionicons": "^7.0.0",
         "ngrx-store-localstorage": "^16.0.0",
