@@ -40,3 +40,5 @@ Thumbs.db
 
 .angular
 www
+beta-app-keystore.jks
+android.json
